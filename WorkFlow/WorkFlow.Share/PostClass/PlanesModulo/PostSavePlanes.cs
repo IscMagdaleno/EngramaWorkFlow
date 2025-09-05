@@ -6,7 +6,6 @@
 		public int iUsuarioID { get; set; }
 		public string nvchTitulo { get; set; }
 		public string nvchDescripcion { get; set; }
-		public DateTime? dtFechaCreacion { get; set; }
 		public string nvchEstado { get; set; }
 	}
 

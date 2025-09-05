@@ -1,0 +1,32 @@
+﻿@inherits EngramaPage
+
+@page "/PagePlanes"
+@using WorkFlow.PWA.Areas.PlanesModulo.Componentes
+
+<MudCard>
+	<MudCardHeader>
+		<CardHeaderContent>
+			<MudText Typo="Typo.h6">Planes</MudText>
+		</CardHeaderContent>
+	</MudCardHeader>
+	<MudCardContent>
+
+		<MudGrid>
+			@if (MostrarPreguntas.False())
+			{
+				<MudItem sm="12" xs="12">
+					<FormPlanes Data="Data" OnPlanesSaved="OnPlanesSaved"></FormPlanes>
+				</MudItem>
+			}
+
+			@if (MostrarPreguntas)
+			{
+				<MudItem sm="12" xs="12">
+					<FormPreguntas Data="@Data" OnRespuestasSaved="OnRespuestasSaved"></FormPreguntas>
+				</MudItem>
+			}
+
+		</MudGrid>
+
+	</MudCardContent>
+</MudCard>

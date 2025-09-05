@@ -1,0 +1,57 @@
+﻿@inherits EngramaComponent
+
+<MudText Typo="Typo.h4" GutterBottom="true">Crear Nuevo Plan de Trabajo</MudText>
+
+<EditForm Model="Data.LstRespuestas[1]">
+	<MudExpansionPanels MultiExpansion="true">
+		<MudExpansionPanel Text="Visión General">
+			<MudTextField @bind-Value="Data.LstRespuestas[0].nvchRespuesta"
+						  Label="1. Descripción general"
+						  Required="true" />
+			<MudTextField @bind-Value="Data.LstRespuestas[1].nvchRespuesta"
+						  Label="2. Problema principal o necesidad"
+						  Required="true" />
+			<MudTextField @bind-Value="Data.LstRespuestas[2].nvchRespuesta"
+						  Label="3. Objetivos clave"
+						  Required="true" />
+		</MudExpansionPanel>
+
+		<MudExpansionPanel Text="Usuarios y Roles">
+
+			<MudTextField @bind-Value="Data.LstRespuestas[3].nvchRespuesta"
+						  Label="4. Usuarios principales y roles"
+						  Required="true" />
+			<MudTextField @bind-Value="Data.LstRespuestas[4].nvchRespuesta"
+						  Label="5. Expectativas de usuarios"
+						  Required="true" />
+		</MudExpansionPanel>
+
+		<MudExpansionPanel Text="Problemas y Soluciones">
+
+			<MudTextField @bind-Value="Data.LstRespuestas[5].nvchRespuesta"
+						  Label="6. Procesos manuales a automatizar"
+						  Required="true" />
+			<MudTextField @bind-Value="Data.LstRespuestas[6].nvchRespuesta"
+						  Label="7. Integraciones externas" />
+		</MudExpansionPanel>
+
+		<MudExpansionPanel Text="Funcionalidades">
+
+			<MudTextField @bind-Value="Data.LstRespuestas[7].nvchRespuesta"
+						  Label="8. Funcionalidades principales"
+						  Required="true" />
+			<MudTextField @bind-Value="Data.LstRespuestas[8].nvchRespuesta"
+						  Label="9. Interacciones o flujos clave"
+						  Required="true" />
+			<MudTextField @bind-Value="Data.LstRespuestas[9].nvchRespuesta"
+						  Label="10. Requisitos no funcionales" />
+		</MudExpansionPanel>
+	</MudExpansionPanels>
+
+	<MudButton Variant="Variant.Filled"
+			   Color="Color.Primary"
+			   Class="mt-4"
+			   OnClick="OnSubmint">
+		Guardar Plan
+	</MudButton>
+</EditForm>

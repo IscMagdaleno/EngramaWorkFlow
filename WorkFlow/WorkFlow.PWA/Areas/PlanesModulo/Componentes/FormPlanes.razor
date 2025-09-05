@@ -1,0 +1,33 @@
+﻿@inherits EngramaComponent
+
+<EditForm Model="@Data.PlanesSelected"
+		  OnValidSubmit="OnSubmint">
+	<DataAnnotationsValidator />
+
+
+		<MudGrid>
+			<MudItem sm="6">
+			
+		
+				<MudTextField @bind-Value="@Data.PlanesSelected.nvchTitulo"
+							  Label="Titulo"
+							  MaxLength="400"
+							  Variant="Variant.Outlined" />
+
+			</MudItem>
+			<MudItem sm="6">
+				<MudTextField @bind-Value="@Data.PlanesSelected.nvchDescripcion"
+							  Label="Descripción"
+							  MaxLength="2000"
+							  Variant="Variant.Outlined" />
+
+
+			</MudItem>
+			<MudItem sm="12">
+				<MudButton Variant="Variant.Filled"
+						   ButtonType="ButtonType.Submit"
+						   Color="Color.Secondary">Guardar</MudButton>
+			</MudItem>
+		</MudGrid>
+</EditForm>
+
