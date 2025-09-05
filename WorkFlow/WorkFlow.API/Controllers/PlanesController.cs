@@ -53,5 +53,21 @@ namespace WorkFlow.API.Controllers
 			return BadRequest(result);
 		}
 
+
+		/// <summary>
+		/// Genera el plan de trabajo 
+		/// </summary>
+		/// <param name="postModel"></param>
+		/// <returns></returns>
+		[HttpPost("PostGeneratePlan")]
+		public async Task<IActionResult> PostGeneratePlan([FromBody] PostGeneratePlan postModel)
+		{
+			var result = await _planesDominio.GenerateAndSavePlanAsync(postModel);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			return BadRequest(result);
+		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Reflection;
 
 using WorkFlow.API.EngramaLevels.Dominio.Core;
 using WorkFlow.API.EngramaLevels.Dominio.Interfaces;
+using WorkFlow.API.EngramaLevels.Dominio.Servicios;
 using WorkFlow.API.EngramaLevels.Infrastructure.Interfaces;
 using WorkFlow.API.EngramaLevels.Infrastructure.Repository;
 
@@ -21,6 +22,10 @@ builder.Services.AddScoped<IPlanesRepository, PlanesRepository>();
 
 builder.Services.AddScoped<ITestDominio, TestDominio>();
 builder.Services.AddScoped<IPlanesDominio, PlanesDominio>();
+
+
+builder.Services.AddScoped<IAzureIAService, AzureIAService>();
+// Asegúrate de que appsettings.json tenga:
 
 
 // Ensure the AddEngramaDependenciesAPI method is defined in the above namespace
