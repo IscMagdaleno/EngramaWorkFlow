@@ -16,8 +16,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 
-builder.Services.AddScoped<ITestDominio, TestDominio>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
+builder.Services.AddScoped<IPlanesRepository, PlanesRepository>();
+
+builder.Services.AddScoped<ITestDominio, TestDominio>();
+builder.Services.AddScoped<IPlanesDominio, PlanesDominio>();
 
 
 // Ensure the AddEngramaDependenciesAPI method is defined in the above namespace
