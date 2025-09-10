@@ -6,26 +6,33 @@ namespace WorkFlow.PWA.Areas.PlanesModulo
 {
 	public partial class PagePlanes : EngramaPage
 	{
-
 		public bool MostrarPreguntas { get; set; }
+		public bool MostrarFases { get; set; }  // Nueva bandera para fases
 
 		public MainPlanes Data { get; set; }
 
 		protected override void OnInitialized()
 		{
 			Data = new MainPlanes(httpService, mapperHelper, validaServicioService);
-
 			MostrarPreguntas = false;
+			MostrarFases = false;
 		}
 
 		private void OnPlanesSaved(Planes planes)
 		{
 			MostrarPreguntas = true;
 		}
-		private void OnRespuestasSaved()
+
+		private async void OnRespuestasSaved()
 		{
 			MostrarPreguntas = false;
+			await Data.GetFasesByPlan();  // Carga fases
+			MostrarFases = true;
 		}
 
+		private void OnFaseSelected()
+		{
+
+		}
 	}
 }
