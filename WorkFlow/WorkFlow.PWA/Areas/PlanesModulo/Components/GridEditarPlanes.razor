@@ -1,0 +1,42 @@
+﻿@inherits EngramaComponent
+
+
+<MudGrid>
+
+	<MudItem sm="12">
+		@if (MostrarFuncionalidades.False())
+		{
+			<MudGrid>
+				@foreach (var item in Data.LstPlanTrabajos)
+				{
+					<MudItem sm="4">
+						<CardPlanes PlanTrabajo="item" OnPlanTrabajoSelected="OnPlanTrabajoSelected" MostrarSeleccionar="true"></CardPlanes>
+					</MudItem>
+				}
+			</MudGrid>
+		}
+	</MudItem>
+
+	@if (MostrarFuncionalidades)
+	{
+		<MudItem sm="12">
+			<CardPlanes PlanTrabajo="Data.PlanTrabajoSelected"></CardPlanes>
+		</MudItem>
+
+		<MudItem sm="12">
+			<MudGrid>
+				@foreach (var item in Data.PlanTrabajoSelected.LstFuncionalidadess)
+				{
+					<MudItem sm="6">
+						<CardFuncionalidad Funcionalidad="@item"></CardFuncionalidad>
+					</MudItem>
+				}
+			</MudGrid>
+		</MudItem>
+
+		<MudItem sm="12">
+			<FormFuncionalidad Data="Data" OnFuncionalidadesSaved="OnFuncionalidadesSaved"></FormFuncionalidad>
+		</MudItem>
+
+	}
+</MudGrid>

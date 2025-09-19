@@ -1,0 +1,43 @@
+﻿@using WorkFlow.Share.Objetos.Planes
+@inherits MudBlazor.MudComponentBase
+
+<MudCard Elevation="3" Class="ma-4">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Funcionalidad?.vchNombre</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">@Funcionalidad?.vchEstatus</MudText>
+        </CardHeaderContent>
+       @*  <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" />
+        </CardHeaderActions> *@
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body1" Class="mb-2">
+            <b>Descripción:</b> @Funcionalidad?.nvchDescripcion
+        </MudText>
+        <MudText Typo="Typo.body1" Class="mb-2">
+            <b>Proceso:</b> @Funcionalidad?.nvchProceso
+        </MudText>
+        <MudText Typo="Typo.body1" Class="mb-2">
+            <b>Componentes:</b> @Funcionalidad?.vchComponentes
+        </MudText>
+        <MudText Typo="Typo.body1" Class="mb-2">
+            <b>Datos Movidos:</b> @Funcionalidad?.nvchDatosMovidos
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary">
+            ID Funcionalidad: @Funcionalidad?.iIdFuncionalidad
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary">
+            ID Plan de Trabajo: @Funcionalidad?.iIdPlanTrabajo
+        </MudText>
+    </MudCardContent>
+  @*   <MudCardActions>
+        <MudButton Variant="Variant.Text" Color="Color.Primary">Ver Detalles</MudButton>
+    </MudCardActions> *@
+</MudCard>
+
+@code {
+    [Parameter]
+    public Funcionalidades? Funcionalidad { get; set; }
+}

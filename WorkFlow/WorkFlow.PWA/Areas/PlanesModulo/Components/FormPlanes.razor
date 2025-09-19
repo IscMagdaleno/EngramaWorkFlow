@@ -1,0 +1,39 @@
+﻿
+@inherits EngramaComponent
+
+<EditForm Model="@Data.PlanTrabajoSelected"
+		  OnValidSubmit="OnSubmint">
+	<DataAnnotationsValidator />
+
+	<MudFocusTrap>
+
+		<MudGrid>
+			<MudItem sm="12">
+	
+
+				<MudTextField @bind-Value="@Data.PlanTrabajoSelected.vchNombre"
+							  Label="Nombre"
+							  MaxLength="100"
+							  Variant="Variant.Outlined" />
+
+			</MudItem>
+			<MudItem sm="12">
+
+				<MudTextField @bind-Value="@Data.PlanTrabajoSelected.nvchDescripcion"
+							  Label="Descripción"
+							  MaxLength="1000"
+							  Lines="4"
+							  Variant="Variant.Outlined" />
+
+
+			</MudItem>
+
+			<MudItem sm="12">
+				<MudButton Variant="Variant.Filled"
+						   ButtonType="ButtonType.Submit"
+						   Color="Color.Secondary">Save PlanTrabajo</MudButton>
+			</MudItem>
+		</MudGrid>
+	</MudFocusTrap>
+</EditForm>
+
