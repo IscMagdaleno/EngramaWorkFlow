@@ -50,7 +50,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 
 		public async Task<SeverityMessage> PostSaveFuncionalidades()
 		{
-			FuncionalidadesSelected.iIdPlanTrabajo = PlanTrabajoSelected.iIdPlanTrabajo;
+			FuncionalidadesSelected.iIdModulo = PlanTrabajoSelected.iIdPlanTrabajo;
 
 			var APIUrl = url + "/PostSaveFuncionalidades";
 			var model = _mapper.Get<Funcionalidades, PostSaveFuncionalidades>(FuncionalidadesSelected);

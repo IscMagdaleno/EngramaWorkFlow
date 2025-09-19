@@ -25,6 +25,7 @@ builder.Services.AddScoped<IPlanesDominio, PlanesDominio>();
 
 
 builder.Services.AddScoped<IAzureIAService, AzureIAService>();
+builder.Services.AddScoped<ILLMModuleGenerator, LLMModuleGenerator>();
 // Asegúrate de que appsettings.json tenga:
 
 

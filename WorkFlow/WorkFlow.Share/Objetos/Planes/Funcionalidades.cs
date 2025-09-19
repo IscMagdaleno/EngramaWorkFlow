@@ -3,21 +3,19 @@
 	public class Funcionalidades
 	{
 		public int iIdFuncionalidad { get; set; }
-		public int iIdPlanTrabajo { get; set; }
-		public string vchNombre { get; set; }
+		public int iIdModulo { get; set; }
 		public string nvchDescripcion { get; set; }
-		public string nvchProceso { get; set; }
-		public string vchComponentes { get; set; }
-		public string nvchDatosMovidos { get; set; }
-		public string vchEstatus { get; set; }
+		public List<string> nvchEntidades { get; set; }
+		public string nvchInteracciones { get; set; }
+		public string nvchTecnico { get; set; }
+		public string nvchConsideraciones { get; set; }
 		public Funcionalidades()
 		{
-			vchNombre = string.Empty;
 			nvchDescripcion = string.Empty;
-			nvchProceso = string.Empty;
-			vchComponentes = string.Empty;
-			nvchDatosMovidos = string.Empty;
-			vchEstatus = string.Empty;
+			nvchEntidades = new List<string>();
+			nvchInteracciones = string.Empty;
+			nvchTecnico = string.Empty;
+			nvchConsideraciones = string.Empty;
 		}
 
 	}

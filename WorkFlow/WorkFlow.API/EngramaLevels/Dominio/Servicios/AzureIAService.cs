@@ -9,6 +9,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 	public interface IAzureIAService
 	{
 		Task<ChatCompletion> CallAzureOpenIA(RequestOpenAI request);
+		Task<ChatCompletion> CallAzureOpenIAJson(RequestOpenAI request);
 	}
 
 	public class AzureIAService : IAzureIAService
@@ -27,6 +28,27 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 		}
 
 		public async Task<ChatCompletion> CallAzureOpenIA(RequestOpenAI request)
+		{
+			var options = new ChatCompletionOptions
+			{
+				Temperature = 1.0f,
+				TopP = 1.0f,
+				FrequencyPenalty = 0.0f,
+				PresencePenalty = 0.0f,
+			};
+
+			var messages = new List<ChatMessage>
+			{
+				new SystemChatMessage(request.Configuration),
+				new UserChatMessage(request.Prompt)
+			};
+
+			var response = await _chatClient.CompleteChatAsync(messages, options);
+
+			return response.Value;
+		}
+
+		public async Task<ChatCompletion> CallAzureOpenIAJson(RequestOpenAI request)
 		{
 			var options = new ChatCompletionOptions
 			{

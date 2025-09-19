@@ -7,14 +7,14 @@
 		public string nvchDescripcion { get; set; }
 		public string vchEstatus { get; set; }
 
-		public List<Funcionalidades> LstFuncionalidadess { get; set; }
+		public List<Modulo> LstModulos { get; set; }
 		public PlanTrabajo()
 		{
 			vchNombre = string.Empty;
 			nvchDescripcion = string.Empty;
 			vchEstatus = string.Empty;
 
-			LstFuncionalidadess = new List<Funcionalidades>();
+			LstModulos = new List<Modulo>();
 		}
 
 	}
