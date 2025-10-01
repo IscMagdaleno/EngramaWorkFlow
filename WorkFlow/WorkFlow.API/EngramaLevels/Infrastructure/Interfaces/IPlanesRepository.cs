@@ -4,9 +4,10 @@ namespace WorkFlow.API.EngramaLevels.Infrastructure.Interfaces
 {
 	public interface IPlanesRepository
 	{
-		Task<IEnumerable<spGetFuncionalidades.Result>> spGetFuncionalidades(spGetFuncionalidades.Request PostModel);
+		Task<IEnumerable<spGetFuncionalidad.Result>> spGetFuncionalidad(spGetFuncionalidad.Request PostModel);
+		Task<IEnumerable<spGetModulo.Result>> spGetModulo(spGetModulo.Request PostModel);
 		Task<IEnumerable<spGetPlanTrabajo.Result>> spGetPlanTrabajo(spGetPlanTrabajo.Request PostModel);
-		Task<spSaveFuncionalidades.Result> spSaveFuncionalidades(spSaveFuncionalidades.Request PostModel);
+		Task<spSaveModulo.Result> spSaveModulo(spSaveModulo.Request PostModel);
 		Task<spSavePlanTrabajo.Result> spSavePlanTrabajo(spSavePlanTrabajo.Request PostModel);
 	}
 }

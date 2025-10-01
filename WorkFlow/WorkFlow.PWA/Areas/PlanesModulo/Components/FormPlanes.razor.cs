@@ -25,10 +25,6 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 				await OnPlanTrabajoSaved.InvokeAsync(Data.PlanTrabajoSelected);
 			}
 			Loading.Hide();
-
-
 		}
-
-
 	}
 }

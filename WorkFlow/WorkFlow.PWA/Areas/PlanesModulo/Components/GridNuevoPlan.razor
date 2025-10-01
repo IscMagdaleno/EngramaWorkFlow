@@ -1,33 +1,51 @@
-﻿
-@inherits EngramaComponent
+﻿@inherits EngramaComponent
 
 <MudGrid>
 
-@if (MostrarFuncionalidades.False())
-{
-	<MudItem sm="12">
-		<FormPlanes Data="Data" OnPlanTrabajoSaved="OnPlanTrabajoSaved"></FormPlanes>
-	</MudItem>
-}
-@if (MostrarFuncionalidades)
-{
-	<MudItem sm="12">
-		<CardPlanes PlanTrabajo="Data.PlanTrabajoSelected"></CardPlanes>
-	</MudItem>
+	@if (MostrarModulos.False())
+	{
+		<MudItem sm="12">
+			<FormPlanes Data="Data" OnPlanTrabajoSaved="OnPlanTrabajoSaved"></FormPlanes>
+		</MudItem>
+	}
+	@if (MostrarModulos)
+	{
+		<MudItem sm="12">
+			<CardPlanes PlanTrabajo="Data.PlanTrabajoSelected"></CardPlanes>
+		</MudItem>
 
-	<MudItem sm="12">
-		<MudGrid>
-			@foreach (var item in Data.PlanTrabajoSelected.LstFuncionalidadess)
-			{
-				<MudItem sm="6">
-					<CardFuncionalidad Funcionalidad="@item"></CardFuncionalidad>
-				</MudItem>
-			}
-		</MudGrid>
-	</MudItem>
+		@if (Data.PlanTrabajoSelected.LstModulos.Any())
+		{
+			<MudItem sm="12">
+				<MudGrid>
+					@foreach (var item in Data.PlanTrabajoSelected.LstModulos)
+					{
+						<MudItem sm="4">
+							<CardModulo ModuloSelected="@item"
+										MostrarSeleccionar="true"
+										OnModuloSelected="OnModuloSelected">
+							</CardModulo>
+						</MudItem>
+					}
+				</MudGrid>
+			</MudItem>
+		}
 
-	<MudItem sm="12">
-			<FormFuncionalidad Data="Data" OnFuncionalidadesSaved="OnFuncionalidadesSaved"></FormFuncionalidad>
-	</MudItem>
-}
+		@if (Data.ModuloSelected.vchTitulo.NotEmpty())
+		{
+			<MudItem sm="12">
+				<CardDetalleModulo ModuloSelected="Data.ModuloSelected"></CardDetalleModulo>
+			</MudItem>
+		}
+
+			<MudItem sm="12">
+				<MudFab StartIcon="@Icons.Material.Filled.Save"
+						Color="Color.Success"
+						OnClick="OnClickSaveModulos"
+						Label="Guardar plan" />
+			</MudItem>
+
+
+	}
 </MudGrid>
+

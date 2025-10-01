@@ -1,0 +1,30 @@
+﻿@using WorkFlow.Share.Objetos.Planes
+
+<MudCard Elevation="3" Class="ma-4">
+	<MudCardHeader>
+		<CardHeaderContent>
+			<MudText Typo="Typo.h6">@ModuloSelected?.vchTitulo</MudText>
+			<MudText Typo="Typo.body2" Color="Color.Secondary">@ModuloSelected?.nvchProposito</MudText>
+		</CardHeaderContent>
+
+	</MudCardHeader>
+	<MudCardContent>
+
+	</MudCardContent>
+	@if (MostrarSeleccionar)
+	{
+		<MudCardActions>
+			<MudButton Variant="Variant.Filled"
+					   Color="Color.Primary"
+					   OnClick="@(()=>OnModuloSelected.InvokeAsync(ModuloSelected))">
+				Ver Detalles
+			</MudButton>
+		</MudCardActions>
+	}
+</MudCard>
+
+@code {
+	[Parameter] public Modulo? ModuloSelected { get; set; }
+	[Parameter] public EventCallback<Modulo> OnModuloSelected { get; set; }
+	[Parameter] public bool MostrarSeleccionar { get; set; }
+}

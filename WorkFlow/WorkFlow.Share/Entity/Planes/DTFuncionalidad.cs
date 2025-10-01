@@ -1,6 +1,6 @@
-﻿namespace WorkFlow.Share.Objetos.Planes
+﻿namespace WorkFlow.Share.Entity.Planes
 {
-	public class Funcionalidades
+	public class DTFuncionalidad
 	{
 		public int iIdFuncionalidad { get; set; }
 		public int iIdModulo { get; set; }
@@ -9,7 +9,8 @@
 		public string nvchInteracciones { get; set; }
 		public string nvchTecnico { get; set; }
 		public string nvchConsideraciones { get; set; }
-		public Funcionalidades()
+
+		public DTFuncionalidad()
 		{
 			nvchDescripcion = string.Empty;
 			nvchEntidades = string.Empty;
@@ -17,6 +18,5 @@
 			nvchTecnico = string.Empty;
 			nvchConsideraciones = string.Empty;
 		}
-
 	}
 }

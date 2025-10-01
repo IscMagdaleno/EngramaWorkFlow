@@ -30,15 +30,6 @@ namespace WorkFlow.API.EngramaLevels.Infrastructure.Repository
 			return new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" };
 		}
 
-		public async Task<spSaveFuncionalidades.Result> spSaveFuncionalidades(spSaveFuncionalidades.Request PostModel)
-		{
-			var result = await _managerHelper.GetAsync<spSaveFuncionalidades.Result, spSaveFuncionalidades.Request>(PostModel);
-			if (result.Ok)
-			{
-				return result.Data;
-			}
-			return new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" };
-		}
 
 		public async Task<IEnumerable<spGetPlanTrabajo.Result>> spGetPlanTrabajo(spGetPlanTrabajo.Request PostModel)
 		{
@@ -50,17 +41,38 @@ namespace WorkFlow.API.EngramaLevels.Infrastructure.Repository
 			return new List<spGetPlanTrabajo.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
 		}
 
-
-
-		public async Task<IEnumerable<spGetFuncionalidades.Result>> spGetFuncionalidades(spGetFuncionalidades.Request PostModel)
+		public async Task<spSaveModulo.Result> spSaveModulo(spSaveModulo.Request PostModel)
 		{
-			var result = await _managerHelper.GetAllAsync<spGetFuncionalidades.Result, spGetFuncionalidades.Request>(PostModel);
+			var result = await _managerHelper.GetWithListAsync<spSaveModulo.Result, spSaveModulo.Request>(PostModel);
 			if (result.Ok)
 			{
 				return result.Data;
 			}
-			return new List<spGetFuncionalidades.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
+			return new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" };
 		}
+
+		public async Task<IEnumerable<spGetModulo.Result>> spGetModulo(spGetModulo.Request PostModel)
+		{
+			var result = await _managerHelper.GetAllAsync<spGetModulo.Result, spGetModulo.Request>(PostModel);
+			if (result.Ok)
+			{
+				return result.Data;
+			}
+			return new List<spGetModulo.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
+		}
+
+
+
+		public async Task<IEnumerable<spGetFuncionalidad.Result>> spGetFuncionalidad(spGetFuncionalidad.Request PostModel)
+		{
+			var result = await _managerHelper.GetAllAsync<spGetFuncionalidad.Result, spGetFuncionalidad.Request>(PostModel);
+			if (result.Ok)
+			{
+				return result.Data;
+			}
+			return new List<spGetFuncionalidad.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
+		}
+
 
 	}
 }

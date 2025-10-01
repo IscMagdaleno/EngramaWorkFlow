@@ -15,12 +15,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 		{
 			Loading.Show();
 
-			var result = await Data.PostSaveFuncionalidades();
-			ShowSnake(result);
-			if (result.bResult)
-			{
-				await OnFuncionalidadesSaved.InvokeAsync(Data.FuncionalidadesSelected);
-			}
+
 			Loading.Hide();
 
 		}

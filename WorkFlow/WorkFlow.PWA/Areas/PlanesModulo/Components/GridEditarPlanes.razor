@@ -17,26 +17,4 @@
 		}
 	</MudItem>
 
-	@if (MostrarFuncionalidades)
-	{
-		<MudItem sm="12">
-			<CardPlanes PlanTrabajo="Data.PlanTrabajoSelected"></CardPlanes>
-		</MudItem>
-
-		<MudItem sm="12">
-			<MudGrid>
-				@foreach (var item in Data.PlanTrabajoSelected.LstFuncionalidadess)
-				{
-					<MudItem sm="6">
-						<CardFuncionalidad Funcionalidad="@item"></CardFuncionalidad>
-					</MudItem>
-				}
-			</MudGrid>
-		</MudItem>
-
-		<MudItem sm="12">
-			<FormFuncionalidad Data="Data" OnFuncionalidadesSaved="OnFuncionalidadesSaved"></FormFuncionalidad>
-		</MudItem>
-
-	}
 </MudGrid>

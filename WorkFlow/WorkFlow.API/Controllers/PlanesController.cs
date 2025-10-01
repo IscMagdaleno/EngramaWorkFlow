@@ -37,21 +37,7 @@ namespace WorkFlow.API.Controllers
 			return BadRequest(result);
 		}
 
-		/// <summary>
-		/// Guarda las funcionalidades a desarrollar en el proyecto
-		/// </summary>
-		/// <param name="postModel"></param>
-		/// <returns></returns>
-		[HttpPost("PostSaveFuncionalidades")]
-		public async Task<IActionResult> PostSaveFuncionalidades([FromBody] PostSaveFuncionalidades postModel)
-		{
-			var result = await _planesDominio.SaveFuncionalidades(postModel);
-			if (result.IsSuccess)
-			{
-				return Ok(result);
-			}
-			return BadRequest(result);
-		}
+
 
 
 		/// <summary>
@@ -70,6 +56,23 @@ namespace WorkFlow.API.Controllers
 			return BadRequest(result);
 		}
 
+
+
+		/// <summary>
+		/// Se guarda el modulo con la lista de Funcionalidades
+		/// </summary>
+		/// <param name="postModel"></param>
+		/// <returns></returns>
+		[HttpPost("PostSaveModulo")]
+		public async Task<IActionResult> PostSaveModulo([FromBody] PostSaveModulo postModel)
+		{
+			var result = await _planesDominio.SaveModulo(postModel);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			return BadRequest(result);
+		}
 
 	}
 }

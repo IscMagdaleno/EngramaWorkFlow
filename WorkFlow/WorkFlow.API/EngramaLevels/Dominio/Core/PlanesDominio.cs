@@ -63,25 +63,6 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 				return Response<PlanTrabajo>.BadResult(ex.Message, new());
 			}
 		}
-		public async Task<Response<Funcionalidades>> SaveFuncionalidades(PostSaveFuncionalidades PostModel)
-		{
-			try
-			{
-				var model = _mapperHelper.Get<PostSaveFuncionalidades, spSaveFuncionalidades.Request>(PostModel);
-				var result = await _planesRepository.spSaveFuncionalidades(model);
-				var validation = _responseHelper.Validacion<spSaveFuncionalidades.Result, Funcionalidades>(result);
-				if (validation.IsSuccess)
-				{
-					PostModel.iIdFuncionalidad = validation.Data.iIdFuncionalidad;
-					validation.Data = _mapperHelper.Get<PostSaveFuncionalidades, Funcionalidades>(PostModel);
-				}
-				return validation;
-			}
-			catch (Exception ex)
-			{
-				return Response<Funcionalidades>.BadResult(ex.Message, new());
-			}
-		}
 
 		public async Task<Response<IEnumerable<PlanTrabajo>>> GetPlanTrabajo(PostGetPlanTrabajo PostModel)
 		{
@@ -92,25 +73,47 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 				var validation = _responseHelper.Validacion<spGetPlanTrabajo.Result, PlanTrabajo>(result);
 				if (validation.IsSuccess)
 				{
-					//foreach (var item in validation.Data)
-					//{
+					foreach (var plan in validation.Data)
+					{
 
-					//	var funcionalidadModel = new spGetFuncionalidades.Request
-					//	{
-					//		iIdPlanTrabajo = item.iIdPlanTrabajo
-					//	};
+						var moduloModel = new spGetModulo.Request
+						{
+							iIdPlanTrabajo = plan.iIdPlanTrabajo
+						};
 
-					//	var resultFuncionalidades = await _planesRepository.spGetFuncionalidades(funcionalidadModel);
-					//	var validationfuncialidades = _responseHelper.Validacion<spGetFuncionalidades.Result, Funcionalidades>(resultFuncionalidades);
+						var resultModulo = await _planesRepository.spGetModulo(moduloModel);
+						var validationModulo = _responseHelper.Validacion<spGetModulo.Result, Modulo>(resultModulo);
 
-					//	if (validationfuncialidades.IsSuccess)
-					//	{
-					//		item.LstModulos = validationfuncialidades.Data.ToList();
-					//	}
+						if (validationModulo.IsSuccess)
+						{
 
-					//}
+							foreach (var modulo in validationModulo.Data)
+							{
 
-					validation.Data = validation.Data;
+
+								var funcionalidadModel = new spGetFuncionalidad.Request
+								{
+									iIdModulo = modulo.iIdModulo
+								};
+
+								var resultFuncionalidades = await _planesRepository.spGetFuncionalidad(funcionalidadModel);
+								var validationfuncialidades = _responseHelper.Validacion<spGetFuncionalidad.Result, Funcionalidades>(resultFuncionalidades);
+
+								if (validationfuncialidades.IsSuccess)
+								{
+
+
+									modulo.LstFuncionalidades = validationfuncialidades.Data.ToList();
+
+								}
+
+							}
+
+							plan.LstModulos = validationModulo.Data.ToList();
+						}
+
+					}
+
 				}
 				return validation;
 			}
@@ -175,6 +178,45 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 			}
 			return sanitized.Trim();
 		}
+
+		public async Task<Response<Modulo>> SaveModulo(PostSaveModulo PostModel)
+		{
+			try
+			{
+				var model = new spSaveModulo.Request
+				{
+					iIdModulo = PostModel.Modulo.iIdModulo,
+					iIdPlanTrabajo = PostModel.Modulo.iIdPlanTrabajo,
+					vchTitulo = PostModel.Modulo.vchTitulo,
+					nvchProposito = PostModel.Modulo.nvchProposito,
+				};
+				var tmpList = new List<DTFuncionalidad>();
+
+				foreach (var item in PostModel.Modulo.LstFuncionalidades)
+				{
+					var funcionalidad = _mapperHelper.Get<Funcionalidades, DTFuncionalidad>(item);
+
+					tmpList.Add(funcionalidad);
+				}
+
+				model.LstFuncionalidades = tmpList;
+
+				var result = await _planesRepository.spSaveModulo(model);
+				var validation = _responseHelper.Validacion<spSaveModulo.Result, Modulo>(result);
+				if (validation.IsSuccess)
+				{
+					PostModel.Modulo.iIdModulo = validation.Data.iIdModulo;
+					validation.Data = _mapperHelper.Get<PostSaveModulo, Modulo>(PostModel);
+				}
+				return validation;
+			}
+			catch (Exception ex)
+			{
+				return Response<Modulo>.BadResult(ex.Message, new());
+			}
+		}
+
+
 
 	}
 }

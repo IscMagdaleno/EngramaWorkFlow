@@ -50,7 +50,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 					  ""LstFuncionalidades"": [
 						{
 						  ""nvchDescripcion"": ""Crear usuario."",
-						  ""nvchEntidades"": [""User""],
+						  ""nvchEntidades"": ""User, Roles"",
 						  ""nvchInteracciones"": ""Consulta Módulo de Autenticación."",
 						  ""nvchTecnico"": ""Backend: Mediator; DB: Tabla Users; Frontend: MudForm."",
 						  ""nvchConsideraciones"": ""Usar JWT; pruebas unitarias.""

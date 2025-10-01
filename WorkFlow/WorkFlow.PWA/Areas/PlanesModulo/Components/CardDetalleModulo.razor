@@ -1,0 +1,30 @@
+﻿@using WorkFlow.Share.Objetos.Planes
+
+<MudCard Elevation="3" Class="ma-4">
+	<MudCardHeader>
+		<CardHeaderContent>
+			<MudText Typo="Typo.body1" Color="Color.Secondary">@ModuloSelected?.iIdModulo</MudText>
+			<MudText Typo="Typo.h6">@ModuloSelected?.vchTitulo</MudText>
+			<MudText Typo="Typo.body2">@ModuloSelected?.nvchProposito</MudText>
+		</CardHeaderContent>
+
+	</MudCardHeader>
+	<MudCardContent>
+		<MudGrid>
+			<MudItem sm="12">
+				@foreach (var item in ModuloSelected.LstFuncionalidades)
+				{
+					<CardFuncionalidad Funcionalidad="item"></CardFuncionalidad>
+				}
+			</MudItem>
+		</MudGrid>
+
+
+	</MudCardContent>
+
+</MudCard>
+
+@code 
+{
+	[Parameter] public Modulo? ModuloSelected { get; set; }
+}

@@ -1,0 +1,37 @@
+﻿@inherits EngramaPage
+
+@page "/PageProgreso"
+@using WorkFlow.PWA.Areas.PlanesModulo.Components
+@using WorkFlow.PWA.Areas.ProgresoModulo.Componentes
+
+<MudCard>
+	<MudCardHeader>
+		<CardHeaderContent>
+			<MudText Typo="Typo.h6">Planes</MudText>
+		</CardHeaderContent>
+
+
+	</MudCardHeader>
+	<MudCardContent>
+		<MudGrid>
+
+			@if (MostrarProgresoPlan.False())
+			{
+
+				<MudItem sm="12">
+					<GridPlanes Data="Data" OnPlanSelected="OnPlanSelected"></GridPlanes>
+				</MudItem>
+			}
+			else
+			{
+				<MudItem sm="12">
+					<GridModulos Data="Data"></GridModulos>
+				</MudItem>
+
+			}
+
+		</MudGrid>
+
+	</MudCardContent>
+</MudCard>
+

@@ -4,7 +4,6 @@ using EngramaCoreStandar.Results;
 using EngramaCoreStandar.Servicios;
 
 using WorkFlow.Share.Objetos.Planes;
-
 using WorkFlow.Share.PostClass.Planes;
 
 namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
@@ -21,7 +20,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 		public PlanTrabajo PlanTrabajoSelected { get; set; }
 		public List<PlanTrabajo> LstPlanTrabajos { get; set; }
 
-		public Funcionalidades FuncionalidadesSelected { get; set; }
+		public Modulo ModuloSelected { get; set; }
 		public MainPlanes(IHttpService httpService, MapperHelper mapperHelper, IValidaServicioService validaServicioService)
 		{
 			_httpService = httpService;
@@ -30,7 +29,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 
 			PlanTrabajoSelected = new PlanTrabajo();
 			LstPlanTrabajos = new List<PlanTrabajo>();
-			FuncionalidadesSelected = new Funcionalidades();
+			ModuloSelected = new Modulo();
 		}
 
 
@@ -41,25 +40,11 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 			var model = _mapper.Get<PlanTrabajo, PostSavePlanTrabajo>(PlanTrabajoSelected);
 			var response = await _httpService.Post<PostSavePlanTrabajo, Response<PlanTrabajo>>(APIUrl, model);
 			var validacion = _validaServicioService.ValidadionServicio(response,
-			onSuccess: data => PlanTrabajoSelected.iIdPlanTrabajo = (data.iIdPlanTrabajo));
+			onSuccess: data => PlanTrabajoSelected = (data));
 			return validacion;
 
 		}
 
-
-
-		public async Task<SeverityMessage> PostSaveFuncionalidades()
-		{
-			FuncionalidadesSelected.iIdModulo = PlanTrabajoSelected.iIdPlanTrabajo;
-
-			var APIUrl = url + "/PostSaveFuncionalidades";
-			var model = _mapper.Get<Funcionalidades, PostSaveFuncionalidades>(FuncionalidadesSelected);
-			var response = await _httpService.Post<PostSaveFuncionalidades, Response<Funcionalidades>>(APIUrl, model);
-			var validacion = _validaServicioService.ValidadionServicio(response,
-			onSuccess: data => PlanTrabajoSelected.LstFuncionalidadess.Add(data));
-			return validacion;
-
-		}
 
 
 		public async Task<SeverityMessage> PostGetPlanTrabajo()
@@ -73,6 +58,31 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 			return validacion;
 		}
 
+
+		public async Task<SeverityMessage> SaveAllModulos()
+		{
+			var result = new SeverityMessage(false, "Proceso de guardar módulos");
+			foreach (var item in PlanTrabajoSelected.LstModulos)
+			{
+				ModuloSelected = item;
+				ModuloSelected.iIdPlanTrabajo = PlanTrabajoSelected.iIdPlanTrabajo;
+				result = await PostSaveModulo();
+			}
+			return result;
+
+		}
+
+
+		public async Task<SeverityMessage> PostSaveModulo()
+		{
+			var APIUrl = url + "/PostSaveModulo";
+			var model = new PostSaveModulo { Modulo = ModuloSelected };
+			var response = await _httpService.Post<PostSaveModulo, Response<Modulo>>(APIUrl, model);
+			var validacion = _validaServicioService.ValidadionServicio(response,
+			onSuccess: data => ModuloSelected = (data));
+			return validacion;
+
+		}
 
 
 	}

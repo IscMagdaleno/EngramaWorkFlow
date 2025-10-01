@@ -1,9 +1,12 @@
-﻿namespace WorkFlow.Share.Objetos.Planes
+﻿
+
+
+namespace WorkFlow.Share.Objetos.Planes
 {
 	public class Modulo
 	{
-		public int IdModulo { get; set; }
-		public int IdPlanTrabajo { get; set; }
+		public int iIdModulo { get; set; }
+		public int iIdPlanTrabajo { get; set; }
 		public string vchTitulo { get; set; }
 		public string nvchProposito { get; set; }
 

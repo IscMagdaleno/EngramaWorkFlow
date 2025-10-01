@@ -2,15 +2,17 @@
 
 using WorkFlow.PWA.Areas.PlanesModulo.Utiles;
 using WorkFlow.PWA.Shared.Common;
+using WorkFlow.Share.Objetos.Planes;
 
 namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 {
 	public partial class GridNuevoPlan : EngramaComponent
 	{
 		public bool MostrarPreguntas { get; set; }
-		public bool MostrarFuncionalidades { get; set; }  // Nueva bandera para fases
+		public bool MostrarModulos { get; set; }  // Nueva bandera para fases
 
 		[Parameter] public MainPlanes Data { get; set; }
+		[Parameter] public EventCallback OnModulosGuardados { get; set; }
 
 
 
@@ -18,12 +20,34 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 		protected override void OnInitialized()
 		{
 			MostrarPreguntas = false;
-			MostrarFuncionalidades = false;
+			MostrarModulos = false;
 		}
 
 		private void OnPlanTrabajoSaved()
 		{
-			MostrarFuncionalidades = true;
+			MostrarModulos = true;
+		}
+
+
+		private void OnModuloSelected(Modulo modulo)
+		{
+			Data.ModuloSelected = modulo;
+		}
+
+		private async Task OnClickSaveModulos()
+		{
+
+
+			Loading.Show();
+
+			var result = await Data.SaveAllModulos();
+			ShowSnake(result);
+			if (result.bResult)
+			{
+
+			}
+			Loading.Hide();
+
 		}
 
 		public async Task OnFuncionalidadesSaved()
