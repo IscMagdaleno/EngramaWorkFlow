@@ -24,13 +24,23 @@
 		<MudText Typo="Typo.body1" Class="mb-2">
 			<b>Consideraciones:</b> @Funcionalidad?.nvchConsideraciones
 		</MudText>
+		@if (MostrarSeleccionar)
+		{
+			<MudCardActions>
+				<MudButton Variant="Variant.Filled"
+						   Color="Color.Primary"
+						   OnClick="@(()=>OnFuncionalidadSelected.InvokeAsync(Funcionalidad))">
+					Ver Detalles
+				</MudButton>
+			</MudCardActions>
+		}
 	</MudCardContent>
-	@*   <MudCardActions>
-        <MudButton Variant="Variant.Text" Color="Color.Primary">Ver Detalles</MudButton>
-    </MudCardActions> *@
+
 </MudCard>
 
 @code {
 	[Parameter]
 	public Funcionalidades? Funcionalidad { get; set; }
+	[Parameter] public EventCallback<Funcionalidades> OnFuncionalidadSelected { get; set; }
+	[Parameter] public bool MostrarSeleccionar { get; set; }
 }

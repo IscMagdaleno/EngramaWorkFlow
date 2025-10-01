@@ -33,7 +33,10 @@
 				@foreach (var funcionalidad in Data.ModuloSelected.LstFuncionalidades)
 				{
 					<MudItem sm="12">
-						<CardFuncionalidad Funcionalidad="funcionalidad"></CardFuncionalidad>
+						<CardFuncionalidad Funcionalidad="funcionalidad" 
+							MostrarSeleccionar ="true"
+										   OnFuncionalidadSelected="OnFuncionalidadSelected">
+						</CardFuncionalidad>
 					</MudItem>
 				}
 			</MudGrid>

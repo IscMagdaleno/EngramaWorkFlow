@@ -17,6 +17,13 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			Data.ModuloSelected = modulo;
 		}
 
+		private void OnFuncionalidadSelected(Funcionalidades funcionalidad)
+		{
+			Data.FuncionalidadSelected = funcionalidad;
+		}
+
+
+
 
 	}
 }

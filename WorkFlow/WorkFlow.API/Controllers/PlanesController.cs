@@ -6,9 +6,7 @@ using WorkFlow.Share.PostClass.Planes;
 namespace WorkFlow.API.Controllers
 {
 
-	/// <summary>
-	/// Test controller to show how Engrama work
-	/// </summary>
+
 	[ApiController]
 	[Route("api/[controller]")]
 	public class PlanesController : ControllerBase

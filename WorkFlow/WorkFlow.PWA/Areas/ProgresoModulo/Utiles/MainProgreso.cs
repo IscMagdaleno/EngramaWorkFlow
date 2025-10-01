@@ -23,6 +23,7 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Utiles
 		public List<PlanTrabajo> LstPlanTrabajos { get; set; }
 
 		public Modulo ModuloSelected { get; set; }
+		public Funcionalidades FuncionalidadSelected { get; set; }
 		public MainProgreso(IHttpService httpService, MapperHelper mapperHelper, IValidaServicioService validaServicioService)
 		{
 			_httpService = httpService;
@@ -32,6 +33,7 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Utiles
 			PlanTrabajoSelected = new PlanTrabajo();
 			LstPlanTrabajos = new List<PlanTrabajo>();
 			ModuloSelected = new Modulo();
+			FuncionalidadSelected = new Funcionalidades();
 		}
 
 		public async Task<SeverityMessage> PostGetPlanTrabajo()

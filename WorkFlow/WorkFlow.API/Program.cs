@@ -19,7 +19,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<ITestRepository, TestRepository>();
 builder.Services.AddScoped<IPlanesRepository, PlanesRepository>();
+builder.Services.AddScoped<IProcesoRepository, ProcesoRepository>();
+builder.Services.AddScoped<ChatMemoryService>();
 
+builder.Services.AddScoped<IProcesoDominio, ProcesoDominio>();
 builder.Services.AddScoped<ITestDominio, TestDominio>();
 builder.Services.AddScoped<IPlanesDominio, PlanesDominio>();
 

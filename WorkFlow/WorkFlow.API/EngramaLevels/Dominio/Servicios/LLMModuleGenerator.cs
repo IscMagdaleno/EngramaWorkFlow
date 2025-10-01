@@ -25,7 +25,8 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 		{
 			// System Prompt simplificado para reducir riesgo de filtrado
 			var systemPrompt = @"
-				Eres un arquitecto de software experto en aplicaciones web con .NET, Clean Architecture, SQL Server y Blazor/MudBlazor. Tu tarea es desglosar aplicaciones en módulos funcionales según Domain-Driven Design (DDD) y principios SOLID.
+				Eres un arquitecto de software experto en aplicaciones web con .NET, Clean Architecture, SQL Server y Blazor/MudBlazor.
+				Tu tarea es desglosar aplicaciones en módulos funcionales según Domain-Driven Design (DDD) y principios SOLID.
 
 				Reglas:
 				- Identifica módulos lógicos basados en el propósito de la app.
