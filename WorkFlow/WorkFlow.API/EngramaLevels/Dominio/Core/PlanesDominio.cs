@@ -1,10 +1,13 @@
 ﻿using EngramaCoreStandar.Mapper;
 using EngramaCoreStandar.Results;
 
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 using WorkFlow.API.EngramaLevels.Dominio.Interfaces;
 using WorkFlow.API.EngramaLevels.Dominio.Servicios;
+using WorkFlow.API.EngramaLevels.Dominio.Servicios.Modelos;
+using WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles;
 using WorkFlow.API.EngramaLevels.Infrastructure.Interfaces;
 using WorkFlow.Share.Entity.Planes;
 using WorkFlow.Share.Objetos.Planes;
@@ -137,8 +140,6 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 				if (planResponse.IsSuccess)
 				{
 
-
-
 					respuesta.Data = planResponse.Data.FirstOrDefault();
 
 					// Asumimos que PlanTrabajo tiene propiedades como sTitulo y sDescripcion basadas en convenciones comunes
@@ -160,6 +161,124 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 				return Response<PlanTrabajo>.BadResult(ex.Message, new PlanTrabajo());
 			}
 		}
+
+
+		public async Task<Response<Proyecto>> GeneraFasesDesarrollo(PostGeneraFasesDesarrollo PostModel)
+		{
+			var respuesta = new Response<Proyecto>();
+
+			var planTrabajo = await GetPlanTrabajo(new PostGetPlanTrabajo { iIdPlanTrabajo = PostModel.iIdPlanTrabajo });
+
+			if (planTrabajo.IsSuccess)
+			{
+				var jsonPlan = JsonSerializer.Serialize(planTrabajo.Data, new JsonSerializerOptions
+				{
+					WriteIndented = true,
+					PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+				});
+
+
+				var resquest = new RequestOpenAI
+				{
+					Prompt = GeneraPrompts.CreateFasesPrompt(jsonPlan),
+					Configuration = GeneraPrompts.GenericPromptSystem(),
+				};
+
+				var llmresponse = await _azureIAService.CallAzureOpenIAJson(resquest);
+				var jsonResponse = llmresponse.Content[0].Text;
+
+				var tmpproyecto = JsonSerializer.Deserialize<Root>(jsonResponse);
+				var proyecto = tmpproyecto.proyectos.SingleOrDefault();
+
+				proyecto.iIdProyecto = 0;
+				var postmodel = _mapperHelper.Get<Proyecto, PostSaveProyecto>(proyecto);
+
+				var saveProyecto = await SaveProyecto(postmodel);
+
+
+				if (saveProyecto.IsSuccess)
+				{
+					saveProyecto.Data.fases = new List<Fases>();
+					foreach (var fase in proyecto.fases)
+					{
+						var postmodelFase = _mapperHelper.Get<Fases, PostSaveFase>(fase);
+						postmodelFase.iIdFase = 0;
+						postmodelFase.iIdProyecto = saveProyecto.Data.iIdProyecto;
+						var saveFase = await SaveFase(postmodelFase);
+						if (saveFase.IsSuccess)
+						{
+							fase.iIdFase = saveFase.Data.iIdFase;
+							fase.iIdProyecto = saveFase.Data.iIdProyecto;
+							saveProyecto.Data.fases.Add(fase);
+						}
+
+
+					}
+				}
+
+
+				respuesta.Data = saveProyecto.Data;
+				respuesta.IsSuccess = true;
+
+			}
+			return respuesta;
+
+		}
+
+		public async Task<Response<Proyecto>> SaveProyecto(PostSaveProyecto PostModel)
+		{
+			try
+			{
+				var model = _mapperHelper.Get<PostSaveProyecto, spSaveProyecto.Request>(PostModel);
+				var result = await _planesRepository.spSaveProyecto(model);
+				var validation = _responseHelper.Validacion<spSaveProyecto.Result, Proyecto>(result);
+				if (validation.IsSuccess)
+				{
+					PostModel.iIdProyecto = validation.Data.iIdProyecto;
+					validation.Data = _mapperHelper.Get<PostSaveProyecto, Proyecto>(PostModel);
+				}
+				return validation;
+			}
+			catch (Exception ex)
+			{
+				return Response<Proyecto>.BadResult(ex.Message, new());
+			}
+		}
+
+		public async Task<Response<Fases>> SaveFase(PostSaveFase PostModel)
+		{
+			try
+			{
+
+				var model = _mapperHelper.Get<PostSaveFase, spSaveFase.Request>(PostModel);
+
+				var tmplist = new List<DTPaso>();
+
+				foreach (var paso in PostModel.pasos)
+				{
+					var dtpaso = _mapperHelper.Get<Paso, DTPaso>(paso);
+
+					tmplist.Add(dtpaso);
+				}
+				model.LstPasos = tmplist;
+
+				var result = await _planesRepository.spSaveFase(model);
+				var validation = _responseHelper.Validacion<spSaveFase.Result, Fases>(result);
+				if (validation.IsSuccess)
+				{
+					PostModel.iIdFase = validation.Data.iIdFase;
+					validation.Data = _mapperHelper.Get<PostSaveFase, Fases>(PostModel);
+				}
+				return validation;
+			}
+			catch (Exception ex)
+			{
+				return Response<Fases>.BadResult(ex.Message, new());
+			}
+		}
+
+
+
 
 		// Método para sanitizar entradas
 		private string SanitizeInput(string input)
@@ -218,6 +337,13 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 
 
 
+
+
+	}
+
+	public class Root
+	{
+		public List<Proyecto> proyectos { get; set; }
 	}
 }
 

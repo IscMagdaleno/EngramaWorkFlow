@@ -8,6 +8,8 @@
 		public string vchEstatus { get; set; }
 
 		public List<Modulo> LstModulos { get; set; }
+
+
 		public PlanTrabajo()
 		{
 			vchNombre = string.Empty;

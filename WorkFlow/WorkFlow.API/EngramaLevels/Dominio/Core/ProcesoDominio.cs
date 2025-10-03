@@ -4,6 +4,7 @@ using EngramaCoreStandar.Results;
 
 using WorkFlow.API.EngramaLevels.Dominio.Interfaces;
 using WorkFlow.API.EngramaLevels.Dominio.Servicios;
+using WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles;
 using WorkFlow.API.EngramaLevels.Infrastructure.Interfaces;
 using WorkFlow.Share.Objetos.Proceso;
 using WorkFlow.Share.PostClass.Proceso;
@@ -16,6 +17,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 		private readonly MapperHelper _mapperHelper;
 		private readonly IResponseHelper _responseHelper;
 		private readonly IProcesoRepository _procesoRepository;
+		private readonly IPlanesDominio _planesDominio;
 		private readonly ChatMemoryService _chatMemoryService;
 		private readonly IAzureIAService _azureIAService;
 
@@ -26,12 +28,14 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 			MapperHelper mapperHelper,
 			IResponseHelper responseHelper,
 			IProcesoRepository procesoRepository,
+			IPlanesDominio planesDominio,
 			ChatMemoryService chatMemoryService,
 			IAzureIAService azureIAService)
 		{
 			_mapperHelper = mapperHelper;
 			_responseHelper = responseHelper;
 			_procesoRepository = procesoRepository;
+			_planesDominio = planesDominio;
 			_chatMemoryService = chatMemoryService;
 			_azureIAService = azureIAService;
 		}
@@ -44,23 +48,26 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 			{
 				var resultado = new Response<Chat>();
 
-
-				var systemPrompt = @" Eres un arquitecto de software experto en aplicaciones web con .NET, Clean Architecture, SQL Server y Blazor/MudBlazor. 
-				Tu tarea es desglosar aplicaciones en módulos funcionales según Domain-Driven Design (DDD) y principios SOLID.";
-
-
-				var ResponseChat = await _chatMemoryService.GetChatPorFuncionalidad(PostModel.iIdFuncionalidad, PostModel.nvchContenido, systemPrompt);
-				if (ResponseChat.IsSuccess)
+				var resultPlan = await _planesDominio.GetPlanTrabajo(new Share.PostClass.Planes.PostGetPlanTrabajo { iIdPlanTrabajo = PostModel.iIdPlanTrabajo });
+				if (resultPlan.IsSuccess)
 				{
 
-					var respustaLLM = await _azureIAService.CallAzureOpenIAWithMemory(ResponseChat.Data);
+					var plan = resultPlan.Data.FirstOrDefault();
+					var systemPrompt = GeneraPrompts.FuncialidadPrompt(PostModel, plan);
 
-					var resultSaveMessage = await _chatMemoryService.GuardarRespuestaLLM(respustaLLM, ResponseChat.Data);
+					var ResponseChat = await _chatMemoryService.GetChatPorFuncionalidad(PostModel.iIdFuncionalidad, PostModel.nvchContenido, systemPrompt);
+					if (ResponseChat.IsSuccess)
+					{
 
-					return resultSaveMessage;
+						var respustaLLM = await _azureIAService.CallAzureOpenIAWithMemory(ResponseChat.Data);
+
+						var resultSaveMessage = await _chatMemoryService.GuardarRespuestaLLM(respustaLLM, ResponseChat.Data);
+
+						return resultSaveMessage;
+
+					}
 
 				}
-
 
 				return resultado;
 			}

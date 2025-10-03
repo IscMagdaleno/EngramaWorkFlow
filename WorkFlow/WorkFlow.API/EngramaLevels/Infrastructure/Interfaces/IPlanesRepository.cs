@@ -7,7 +7,9 @@ namespace WorkFlow.API.EngramaLevels.Infrastructure.Interfaces
 		Task<IEnumerable<spGetFuncionalidad.Result>> spGetFuncionalidad(spGetFuncionalidad.Request PostModel);
 		Task<IEnumerable<spGetModulo.Result>> spGetModulo(spGetModulo.Request PostModel);
 		Task<IEnumerable<spGetPlanTrabajo.Result>> spGetPlanTrabajo(spGetPlanTrabajo.Request PostModel);
+		Task<spSaveFase.Result> spSaveFase(spSaveFase.Request PostModel);
 		Task<spSaveModulo.Result> spSaveModulo(spSaveModulo.Request PostModel);
 		Task<spSavePlanTrabajo.Result> spSavePlanTrabajo(spSavePlanTrabajo.Request PostModel);
+		Task<spSaveProyecto.Result> spSaveProyecto(spSaveProyecto.Request PostModel);
 	}
 }

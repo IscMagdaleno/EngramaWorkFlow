@@ -3,6 +3,7 @@
 using System.Text.Json;
 
 using WorkFlow.API.EngramaLevels.Dominio.Servicios.Modelos;
+using WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles;
 using WorkFlow.Share.Objetos.Planes;
 
 namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
@@ -24,42 +25,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 		public async Task<List<Modulo>> GenerateModules(string titulo, string descripcion)
 		{
 			// System Prompt simplificado para reducir riesgo de filtrado
-			var systemPrompt = @"
-				Eres un arquitecto de software experto en aplicaciones web con .NET, Clean Architecture, SQL Server y Blazor/MudBlazor.
-				Tu tarea es desglosar aplicaciones en módulos funcionales según Domain-Driven Design (DDD) y principios SOLID.
-
-				Reglas:
-				- Identifica módulos lógicos basados en el propósito de la app.
-				- Cada módulo debe tener:
-				  - ""vchTitulo"": Nombre claro del módulo (en español).
-				  - ""nvchProposito"": Propósito del módulo, explicando su rol en la app.
-				  - ""Funcionalidades"": Lista de funcionalidades, cada una con:
-					- Descripción de la funcionalidad.
-					- Entidades involucradas (e.g., User, Order).
-					- Interacciones con otros módulos.
-					- Detalles técnicos: Backend (.NET), DB (SQL Server), Frontend (MudBlazor).
-					- Seguridad, escalabilidad, pruebas.
-				- Genera salida en JSON válido con clave ""modules"".
-				- Evita contenido sensible o complejo que pueda activar filtros de contenido.
-
-				Ejemplo:
-				{
-				  ""LstModulos"": [
-					{
-					  ""vchTitulo"": ""Gestión de Usuarios"",
-					  ""nvchProposito"": ""Administra usuarios según Clean Architecture."",
-					  ""LstFuncionalidades"": [
-						{
-						  ""nvchDescripcion"": ""Crear usuario."",
-						  ""nvchEntidades"": ""User, Roles"",
-						  ""nvchInteracciones"": ""Consulta Módulo de Autenticación."",
-						  ""nvchTecnico"": ""Backend: Mediator; DB: Tabla Users; Frontend: MudForm."",
-						  ""nvchConsideraciones"": ""Usar JWT; pruebas unitarias.""
-						}
-					  ]
-					}
-				  ]
-				}";
+			var systemPrompt = GeneraPrompts.GeneraModulosPrompt();
 
 			// Prompt del usuario
 			var userPrompt = $@"

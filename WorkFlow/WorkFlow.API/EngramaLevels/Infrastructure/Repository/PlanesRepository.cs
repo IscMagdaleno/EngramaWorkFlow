@@ -73,6 +73,26 @@ namespace WorkFlow.API.EngramaLevels.Infrastructure.Repository
 			return new List<spGetFuncionalidad.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
 		}
 
+		public async Task<spSaveProyecto.Result> spSaveProyecto(spSaveProyecto.Request PostModel)
+		{
+			var result = await _managerHelper.GetAsync<spSaveProyecto.Result, spSaveProyecto.Request>(PostModel);
+			if (result.Ok)
+			{
+				return result.Data;
+			}
+			return new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" };
+		}
+
+		public async Task<spSaveFase.Result> spSaveFase(spSaveFase.Request PostModel)
+		{
+			var result = await _managerHelper.GetWithListAsync<spSaveFase.Result, spSaveFase.Request>(PostModel);
+			if (result.Ok)
+			{
+				return result.Data;
+			}
+			return new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" };
+		}
+
 
 	}
 }

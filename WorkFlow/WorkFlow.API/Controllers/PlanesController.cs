@@ -57,6 +57,23 @@ namespace WorkFlow.API.Controllers
 
 
 		/// <summary>
+		/// Genera las fases para el desarrollo de la aplicación
+		/// </summary>
+		/// <param name="postModel"></param>
+		/// <returns></returns>
+		[HttpPost("PostGeneraFasesDesarrollo")]
+		public async Task<IActionResult> PostGeneraFasesDesarrollo([FromBody] PostGeneraFasesDesarrollo postModel)
+		{
+			var result = await _planesDominio.GeneraFasesDesarrollo(postModel);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			return BadRequest(result);
+		}
+
+
+		/// <summary>
 		/// Se guarda el modulo con la lista de Funcionalidades
 		/// </summary>
 		/// <param name="postModel"></param>
