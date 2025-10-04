@@ -1,0 +1,90 @@
+﻿@using WorkFlow.Share.Objetos.Planes
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h4">@Proyecto.nvchNombre</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body1" Class="mb-4">
+            @((Proyecto.nvchDescripcion)))
+        </MudText>
+        <MudText Typo="Typo.caption">
+            Creado: @(Proyecto.dtCreadoEn.ToString("g") ?? "N/A")
+        </MudText>
+        <MudText Typo="Typo.caption">
+            Actualizado: @(Proyecto.dtActualizadoEn.ToString("g") ?? "N/A")
+        </MudText>
+        @if (Proyecto.fases?.Any() == true)
+        {
+            <MudExpansionPanels MultiExpansion="false" Class="mt-6">
+                @foreach (var fase in Proyecto.fases.OrderBy(f => f.smNumeroSecuencia))
+                {
+                    <MudExpansionPanel>
+                        <TitleContent>
+                            <MudText Typo="Typo.h6">@fase.nvchTitulo</MudText>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                @((fase.nvchDescripcion)))
+                            </MudText>
+                            <MudText Typo="Typo.caption">
+                                Creado: @(fase.dtCreadoEn?.ToString("g") ?? "N/A")
+                            </MudText>
+                            <MudText Typo="Typo.caption">
+                                Actualizado: @(fase.dtActualizadoEn?.ToString("g") ?? "N/A")
+                            </MudText>
+                            @if (fase.pasos?.Any() == true)
+                            {
+                                <MudList T="Fases" Class="mt-4">
+                                    @foreach (var paso in fase.pasos.OrderBy(p => p.smNumeroSecuencia))
+                                    {
+                                        <MudListItem>
+                                            <MudText Typo="Typo.subtitle1">Paso @(paso.smNumeroSecuencia)</MudText>
+                                            <MudText Typo="Typo.body2"><strong>Descripción:</strong></MudText>
+                                            <MudText Typo="Typo.body2" Class="ml-4 mb-2">
+                                                @((paso.nvchDescripcion)))
+                                            </MudText>
+                                            <MudText Typo="Typo.body2"><strong>Propósito:</strong></MudText>
+                                            <MudText Typo="Typo.body2" Class="ml-4 mb-2">
+                                                @((paso.nvchProposito)))
+                                            </MudText>
+                                            <MudText Typo="Typo.body2"><strong>Características:</strong></MudText>
+                                            <MudText Typo="Typo.body2" Class="ml-4 mb-2">
+                                                @((paso.nvchCaracteristicas)))
+                                            </MudText>
+                                            <MudText Typo="Typo.body2"><strong>Enfoque:</strong></MudText>
+                                            <MudText Typo="Typo.body2" Class="ml-4 mb-2">
+                                                @((paso.nvchEnfoque)))
+                                            </MudText>
+                                            <MudText Typo="Typo.caption">
+                                                Creado: @(paso.dtCreadoEn?.ToString("g") ?? "N/A")
+                                            </MudText>
+                                            <MudText Typo="Typo.caption">
+                                                Actualizado: @(paso.dtActualizadoEn?.ToString("g") ?? "N/A")
+                                            </MudText>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body2" Class="mt-4">No hay pasos definidos para esta fase.</MudText>
+                            }
+                        </ChildContent>
+                    </MudExpansionPanel>
+                }
+            </MudExpansionPanels>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2" Class="mt-4">No hay fases definidas para este proyecto.</MudText>
+        }
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    public Proyecto Proyecto { get; set; } = new Proyecto();
+}

@@ -1,4 +1,6 @@
-﻿namespace WorkFlow.Share.Objetos.Planes
+﻿using EngramaCoreStandar;
+
+namespace WorkFlow.Share.Objetos.Planes
 {
 
 	public class Proyecto
@@ -14,13 +16,12 @@
 		{
 			nvchNombre = string.Empty;
 			nvchDescripcion = string.Empty;
+			dtCreadoEn = Defaults.SqlMinDate();
+			dtActualizadoEn = Defaults.SqlMinDate();
+			fases = new List<Fases>();
 		}
 
 
-		public class Rootobject
-		{
-			public Proyecto[] proyectos { get; set; }
-		}
 
 	}
 }

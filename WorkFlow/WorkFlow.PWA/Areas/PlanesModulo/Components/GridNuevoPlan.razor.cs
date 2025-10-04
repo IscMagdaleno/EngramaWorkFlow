@@ -10,6 +10,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 	{
 		public bool MostrarPreguntas { get; set; }
 		public bool MostrarModulos { get; set; }  // Nueva bandera para fases
+		public bool MostrarProyecto { get; set; }  // Nueva bandera para fases
 
 		[Parameter] public MainPlanes Data { get; set; }
 		[Parameter] public EventCallback OnModulosGuardados { get; set; }
@@ -21,6 +22,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 		{
 			MostrarPreguntas = false;
 			MostrarModulos = false;
+			MostrarProyecto = false;
 		}
 
 		private void OnPlanTrabajoSaved()
@@ -44,16 +46,17 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 			ShowSnake(result);
 			if (result.bResult)
 			{
-
+				var resultProceso = await Data.PostGeneraFasesDesarrollo();
+				ShowSnake(resultProceso);
+				if (resultProceso.bResult)
+				{
+					MostrarProyecto = true;
+				}
 			}
 			Loading.Hide();
 
 		}
 
-		public async Task OnFuncionalidadesSaved()
-		{
-			await Task.Delay(1);
-			StateHasChanged();
-		}
+
 	}
 }

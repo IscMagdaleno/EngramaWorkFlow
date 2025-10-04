@@ -21,6 +21,10 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 		public List<PlanTrabajo> LstPlanTrabajos { get; set; }
 
 		public Modulo ModuloSelected { get; set; }
+
+
+		public Proyecto ProyectoSelected { get; set; }
+
 		public MainPlanes(IHttpService httpService, MapperHelper mapperHelper, IValidaServicioService validaServicioService)
 		{
 			_httpService = httpService;
@@ -30,6 +34,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 			PlanTrabajoSelected = new PlanTrabajo();
 			LstPlanTrabajos = new List<PlanTrabajo>();
 			ModuloSelected = new Modulo();
+			ProyectoSelected = new Proyecto();
 		}
 
 
@@ -84,6 +89,18 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Utiles
 
 		}
 
+
+
+		public async Task<SeverityMessage> PostGeneraFasesDesarrollo()
+		{
+			var APIUrl = url + "/PostGeneraFasesDesarrollo";
+			var model = new PostGeneraFasesDesarrollo { iIdPlanTrabajo = PlanTrabajoSelected.iIdPlanTrabajo };
+			var response = await _httpService.Post<PostGeneraFasesDesarrollo, Response<Proyecto>>(APIUrl, model);
+			var validacion = _validaServicioService.ValidadionServicio(response,
+			onSuccess: data => ProyectoSelected = (data));
+			return validacion;
+
+		}
 
 	}
 }
