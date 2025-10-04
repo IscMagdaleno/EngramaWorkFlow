@@ -93,6 +93,35 @@ namespace WorkFlow.API.EngramaLevels.Infrastructure.Repository
 			return new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" };
 		}
 
+		public async Task<IEnumerable<spGetProyecto.Result>> spGetProyecto(spGetProyecto.Request PostModel)
+		{
+			var result = await _managerHelper.GetAllAsync<spGetProyecto.Result, spGetProyecto.Request>(PostModel);
+			if (result.Ok)
+			{
+				return result.Data;
+			}
+			return new List<spGetProyecto.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
+		}
+
+		public async Task<IEnumerable<spGetFase.Result>> spGetFase(spGetFase.Request PostModel)
+		{
+			var result = await _managerHelper.GetAllAsync<spGetFase.Result, spGetFase.Request>(PostModel);
+			if (result.Ok)
+			{
+				return result.Data;
+			}
+			return new List<spGetFase.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
+		}
+
+		public async Task<IEnumerable<spGetPaso.Result>> spGetPaso(spGetPaso.Request PostModel)
+		{
+			var result = await _managerHelper.GetAllAsync<spGetPaso.Result, spGetPaso.Request>(PostModel);
+			if (result.Ok)
+			{
+				return result.Data;
+			}
+			return new List<spGetPaso.Result>() { new() { bResult = false, vchMessage = $"[{(result.Ex.NotNull() ? result.Ex.Message : "")}] - [{result.Msg}]" } };
+		}
 
 	}
 }

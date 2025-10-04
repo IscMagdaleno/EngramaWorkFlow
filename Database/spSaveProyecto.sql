@@ -3,7 +3,8 @@ IF OBJECT_ID( 'spSaveProyecto' ) IS NULL
 	EXEC ('CREATE PROCEDURE spSaveProyecto AS SET NOCOUNT ON;') 
 GO 
 ALTER PROCEDURE spSaveProyecto (
-@iIdProyecto INT, 
+@iIdProyecto INT,
+@iIdPlanTrabajo INT, 
 @nvchNombre NVARCHAR (510) , 
 @nvchDescripcion NVARCHAR (MAX)  
 ) 
@@ -31,12 +32,12 @@ BEGIN
 	 ( 
 
 		nvchNombre, 			nvchDescripcion, 			dtCreadoEn, 	
-		dtActualizadoEn 	
+		dtActualizadoEn 	,iIdPlanTrabajo
 	)
 	VALUES 
 	(
 		@nvchNombre,		@nvchDescripcion,		GETDATE(),
-		GETDATE()
+		GETDATE(), @iIdPlanTrabajo
 	)
 		 SET @iIdProyecto = @@IDENTITY
 END

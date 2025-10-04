@@ -6,6 +6,7 @@ namespace WorkFlow.Share.Objetos.Planes
 	public class Proyecto
 	{
 		public int iIdProyecto { get; set; }
+		public int iIdPlanTrabajo { get; set; }
 		public string nvchNombre { get; set; }
 		public string nvchDescripcion { get; set; }
 		public DateTime dtCreadoEn { get; set; }

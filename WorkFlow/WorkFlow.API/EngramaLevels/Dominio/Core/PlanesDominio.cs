@@ -191,6 +191,8 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 				var proyecto = tmpproyecto.proyectos.SingleOrDefault();
 
 				proyecto.iIdProyecto = 0;
+				proyecto.iIdPlanTrabajo = PostModel.iIdPlanTrabajo;
+
 				var postmodel = _mapperHelper.Get<Proyecto, PostSaveProyecto>(proyecto);
 
 				var saveProyecto = await SaveProyecto(postmodel);
@@ -224,6 +226,68 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 			return respuesta;
 
 		}
+
+		public async Task<Response<IEnumerable<Proyecto>>> GetProyecto(PostGetProyecto PostModel)
+		{
+			try
+			{
+				var model = _mapperHelper.Get<PostGetProyecto, spGetProyecto.Request>(PostModel);
+				var result = await _planesRepository.spGetProyecto(model);
+				var validation = _responseHelper.Validacion<spGetProyecto.Result, Proyecto>(result);
+				if (validation.IsSuccess)
+				{
+					validation.Data = validation.Data;
+
+
+					foreach (var proyecto in validation.Data)
+					{
+						var requestFase = new spGetFase.Request
+						{
+							iIdProyecto = proyecto.iIdProyecto
+						};
+
+
+						var resultFase = await _planesRepository.spGetFase(requestFase);
+						var validationFase = _responseHelper.Validacion<spGetFase.Result, Fases>(resultFase);
+						if (validationFase.IsSuccess)
+						{
+
+							foreach (var fase in validationFase.Data)
+							{
+
+								var requestPaso = new spGetPaso.Request
+								{
+									iIdFase = fase.iIdFase
+								};
+
+								var resultpaso = await _planesRepository.spGetPaso(requestPaso);
+								var validationPaso = _responseHelper.Validacion<spGetPaso.Result, Paso>(resultpaso);
+
+								if (validationPaso.IsSuccess)
+								{
+
+									fase.pasos = validationPaso.Data.ToList();
+
+								}
+							}
+
+							proyecto.fases = validationFase.Data.ToList();
+
+						}
+
+
+					}
+
+				}
+				return validation;
+			}
+			catch (Exception ex)
+			{
+				return Response<IEnumerable<Proyecto>>.BadResult(ex.Message, new List<Proyecto>());
+			}
+		}
+
+
 
 		public async Task<Response<Proyecto>> SaveProyecto(PostSaveProyecto PostModel)
 		{

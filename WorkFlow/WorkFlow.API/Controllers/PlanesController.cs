@@ -89,5 +89,22 @@ namespace WorkFlow.API.Controllers
 			return BadRequest(result);
 		}
 
+
+		/// <summary>
+		/// Consulta todos los proyectos de la base de datos o uno individual según el parámetro
+		/// </summary>
+		/// <param name="postModel"></param>
+		/// <returns></returns>
+		[HttpPost("PostGetProyecto")]
+		public async Task<IActionResult> PostGetProyecto([FromBody] PostGetProyecto postModel)
+		{
+			var result = await _planesDominio.GetProyecto(postModel);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			return BadRequest(result);
+		}
+
 	}
 }

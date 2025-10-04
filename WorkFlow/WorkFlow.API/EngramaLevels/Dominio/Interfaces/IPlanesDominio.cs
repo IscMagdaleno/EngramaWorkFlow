@@ -9,6 +9,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Interfaces
 	{
 		Task<Response<Proyecto>> GeneraFasesDesarrollo(PostGeneraFasesDesarrollo PostModel);
 		Task<Response<IEnumerable<PlanTrabajo>>> GetPlanTrabajo(PostGetPlanTrabajo PostModel);
+		Task<Response<IEnumerable<Proyecto>>> GetProyecto(PostGetProyecto PostModel);
 		Task<Response<Modulo>> SaveModulo(PostSaveModulo PostModel);
 		Task<Response<PlanTrabajo>> SavePlanTrabajo(PostSavePlanTrabajo PostModel);
 		Task<Response<Proyecto>> SaveProyecto(PostSaveProyecto PostModel);
