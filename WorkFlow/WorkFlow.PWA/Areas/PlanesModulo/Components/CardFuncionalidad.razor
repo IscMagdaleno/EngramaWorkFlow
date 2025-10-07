@@ -6,24 +6,43 @@
 		<CardHeaderContent>
 			<MudText Typo="Typo.body2" Color="Color.Secondary">@Funcionalidad?.nvchDescripcion</MudText>
 		</CardHeaderContent>
-		@*  <CardHeaderActions>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" />
-        </CardHeaderActions> *@
+		<CardHeaderActions>
+			@if (MostrarFormFuncionalidad)
+			{
+				<MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Color="Color.Error" OnClick="OnClickFormModulo" />
+			}
+			else
+			{
+				<MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" OnClick="OnClickFormModulo" />
+			}
+		</CardHeaderActions>
 	</MudCardHeader>
 	<MudCardContent>
-		<MudText Typo="Typo.body1" Class="mb-2">
-			<b>Entidades:</b> @Funcionalidad?.nvchEntidades
-		</MudText>
-		<MudText Typo="Typo.body1" Class="mb-2">
-			<b>Interacciones:</b> @Funcionalidad?.nvchInteracciones
-		</MudText>
-		<MudText Typo="Typo.body1" Class="mb-2">
-			<b>Técnico:</b> @Funcionalidad?.nvchTecnico
-		</MudText>
-		<MudText Typo="Typo.body1" Class="mb-2">
-			<b>Consideraciones:</b> @Funcionalidad?.nvchConsideraciones
-		</MudText>
+
+		@if (MostrarFormFuncionalidad)
+		{
+			<FormFuncionalidad FuncionalidaSelected="Funcionalidad"
+							   OnFuncionalidadesSaved="OnFuncionalidadesSaved">
+			</FormFuncionalidad>
+		}
+		else
+		{
+			<MudText Typo="Typo.body1" Class="mb-2">
+				<b>Entidades:</b> @Funcionalidad?.nvchEntidades
+			</MudText>
+			<MudText Typo="Typo.body1" Class="mb-2">
+				<b>Interacciones:</b> @Funcionalidad?.nvchInteracciones
+			</MudText>
+			<MudText Typo="Typo.body1" Class="mb-2">
+				<b>Técnico:</b> @Funcionalidad?.nvchTecnico
+			</MudText>
+			<MudText Typo="Typo.body1" Class="mb-2">
+				<b>Consideraciones:</b> @Funcionalidad?.nvchConsideraciones
+			</MudText>
+		}
+
+
+
 		@if (MostrarSeleccionar)
 		{
 			<MudCardActions>
@@ -39,8 +58,5 @@
 </MudCard>
 
 @code {
-	[Parameter]
-	public Funcionalidades? Funcionalidad { get; set; }
-	[Parameter] public EventCallback<Funcionalidades> OnFuncionalidadSelected { get; set; }
-	[Parameter] public bool MostrarSeleccionar { get; set; }
+
 }

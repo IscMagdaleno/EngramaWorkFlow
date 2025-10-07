@@ -30,7 +30,7 @@ SET NOCOUNT ON
 		 M.iIdModulo, 			 M.iIdPlanTrabajo, 			 M.vchTitulo, 	
 				 M.nvchProposito 	FROM
 		 dbo.Modulo M  WITH(NOLOCK)  
-     where @iIdPlanTrabajo =@iIdPlanTrabajo;
+     where iIdPlanTrabajo =@iIdPlanTrabajo;
 
 
 		IF NOT EXISTS (SELECT 1 FROM #Result)

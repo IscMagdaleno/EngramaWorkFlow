@@ -38,7 +38,7 @@
 			@if (Data.ModuloSelected.vchTitulo.NotEmpty())
 			{
 				<MudItem sm="12">
-					<CardDetalleModulo ModuloSelected="Data.ModuloSelected"></CardDetalleModulo>
+					<CardDetalleModulo ModuloSelected="Data.ModuloSelected" OnInfoSaved="OnInfoSaved"></CardDetalleModulo>
 				</MudItem>
 			}
 
@@ -54,8 +54,11 @@
 	}
 	else
 	{
-		<GridProyecto Proyecto="@Data.ProyectoSelected">
-		</GridProyecto>
+		<MudItem sm="12">
+			<GridProyecto Proyecto="@Data.ProyectoSelected">
+			</GridProyecto>
+		</MudItem>
+
 	}
 
 

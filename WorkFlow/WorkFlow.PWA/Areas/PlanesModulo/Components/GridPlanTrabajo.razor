@@ -3,67 +3,60 @@
 <MudCard>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h4">@Proyecto.nvchNombre</MudText>
+            <MudText Typo="Typo.h4">@PlanTrabajo.vchNombre</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
         <MudText Typo="Typo.body1" Class="mb-4">
-            @((Proyecto.nvchDescripcion))
+            @((PlanTrabajo.nvchDescripcion)))
         </MudText>
         <MudText Typo="Typo.caption">
-            Creado: @(Proyecto.dtCreadoEn.ToString("g") ?? "N/A")
+            Estatus: @(PlanTrabajo.vchEstatus)
         </MudText>
-        <MudText Typo="Typo.caption">
-            Actualizado: @(Proyecto.dtActualizadoEn.ToString("g") ?? "N/A")
-        </MudText>
-        @if (Proyecto.fases?.Any() == true)
+
+
+        @if (PlanTrabajo.LstModulos?.Any() == true)
         {
             <MudExpansionPanels MultiExpansion="false" Class="mt-6">
-                @foreach (var fase in Proyecto.fases.OrderBy(f => f.smNumeroSecuencia))
+                @foreach (var modulo in PlanTrabajo.LstModulos.OrderBy(f => f.iIdModulo))
                 {
                     <MudExpansionPanel>
                         <TitleContent>
-                            <MudText Typo="Typo.h6">@fase.nvchTitulo</MudText>
+                            <MudText Typo="Typo.h6">@modulo.vchTitulo</MudText>
                         </TitleContent>
                         <ChildContent>
                             <MudText Typo="Typo.body2" Class="mb-4">
-                                @((fase.nvchDescripcion)))
+                                @((modulo.nvchProposito)))
                             </MudText>
-                            <MudText Typo="Typo.caption">
-                                Creado: @(fase.dtCreadoEn?.ToString("g") ?? "N/A")
-                            </MudText>
-                            <MudText Typo="Typo.caption">
-                                Actualizado: @(fase.dtActualizadoEn?.ToString("g") ?? "N/A")
-                            </MudText>
-                            @if (fase.pasos?.Any() == true)
+
+                            @if (modulo.LstFuncionalidades?.Any() == true)
                             {
-                                <MudList T="Fases" Class="mt-4">
-                                    @foreach (var paso in fase.pasos.OrderBy(p => p.smNumeroSecuencia))
+                                <MudList T="Funcionalidades" Class="mt-4">
+                                    @foreach (var funcion in modulo.LstFuncionalidades.OrderBy(p => p.iIdFuncionalidad))
                                     {
                                         <MudListItem>
-                                            <MudText Typo="Typo.subtitle1">Paso @(paso.smNumeroSecuencia)</MudText>
+                                            <MudText Typo="Typo.subtitle1">Función @(funcion.iIdFuncionalidad)</MudText>
                                             <MudText Typo="Typo.body2"><strong>Descripción:</strong></MudText>
                                             <MudText Typo="Typo.body2" Class="ml-4 mb-2">
-                                                @((paso.nvchDescripcion))
+                                                @((funcion.nvchDescripcion))
                                             </MudText>
-                                            <MudText Typo="Typo.body2"><strong>Propósito:</strong></MudText>
+                                            <MudText Typo="Typo.body2"><strong>Entidades:</strong></MudText>
                                             <MudText Typo="Typo.body2" Class="ml-4 mb-2">
-                                                @((paso.nvchProposito))
+                                                @((funcion.nvchEntidades))
                                             </MudText>
-                                            <MudText Typo="Typo.body2"><strong>Características:</strong></MudText>
+                                            <MudText Typo="Typo.body2"><strong>Interacciones:</strong></MudText>
                                             <MudText Typo="Typo.body2" Class="ml-4 mb-2">
-                                                @((paso.nvchCaracteristicas))
+                                                @((funcion.nvchInteracciones))
                                             </MudText>
-                                            <MudText Typo="Typo.body2"><strong>Enfoque:</strong></MudText>
+                                            <MudText Typo="Typo.body2"><strong>Técnico:</strong></MudText>
                                             <MudText Typo="Typo.body2" Class="ml-4 mb-2">
-                                                @((paso.nvchEnfoque))
+                                                @((funcion.nvchTecnico))
                                             </MudText>
                                             <MudText Typo="Typo.caption">
-                                                Creado: @(paso.dtCreadoEn?.ToString("g") ?? "N/A")
+                                                Consideraciones: @(funcion.nvchConsideraciones)
                                             </MudText>
-                                            <MudText Typo="Typo.caption">
-                                                Actualizado: @(paso.dtActualizadoEn?.ToString("g") ?? "N/A")
-                                            </MudText>
+                          
+
                                         </MudListItem>
                                     }
                                 </MudList>
@@ -86,5 +79,5 @@
 
 @code {
     [Parameter]
-    public Proyecto Proyecto { get; set; } = new Proyecto();
+    public PlanTrabajo PlanTrabajo { get; set; } = new PlanTrabajo();
 }

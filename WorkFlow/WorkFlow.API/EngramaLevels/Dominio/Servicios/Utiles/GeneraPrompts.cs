@@ -53,7 +53,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles
 				- Identifica módulos lógicos basados en el propósito de la app.
 				- Cada módulo debe tener:
 				  - ""vchTitulo"": Nombre claro del módulo (en español).
-				  - ""nvchProposito"": Propósito del módulo, explicando su rol en la app.
+				  - ""nvchProposito"": Propósito a detalle del módulo, explicando su rol en la app, describiendo a detalle el funcionamiento y el propósito de su creación.
 				  - ""Funcionalidades"": Lista de funcionalidades, cada una con:
 					- Descripción de la funcionalidad.
 					- Entidades involucradas (e.g., User, Order).
@@ -68,7 +68,8 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles
 				  ""LstModulos"": [
 					{
 					  ""vchTitulo"": ""Gestión de Usuarios"",
-					  ""nvchProposito"": ""Administra usuarios según Clean Architecture."",
+					  ""nvchProposito"": ""Administra usuarios según Clean Architecture. 
+					  Este modulo mostrar una tabla con los usuario y un boton agregar nuevo, al agrega nuevo se visualizara el formulario... etc."",
 					  ""LstFuncionalidades"": [
 						{
 						  ""nvchDescripcion"": ""Crear usuario."",

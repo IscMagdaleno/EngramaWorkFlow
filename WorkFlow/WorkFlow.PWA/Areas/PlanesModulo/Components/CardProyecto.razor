@@ -1,0 +1,39 @@
+﻿@using WorkFlow.Share.Objetos.Planes
+<h3>CardProyecto</h3>
+
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h4">@Proyecto.nvchNombre</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body1" Class="mb-4">
+            @((Proyecto.nvchDescripcion)))
+        </MudText>
+        <MudText Typo="Typo.caption">
+            Creado: @(Proyecto.dtCreadoEn.ToString("g") ?? "N/A")
+        </MudText>
+        <MudText Typo="Typo.caption">
+            Actualizado: @(Proyecto.dtActualizadoEn.ToString("g") ?? "N/A")
+        </MudText>
+    </MudCardContent>
+    @if (MostrarSeleccionar)
+    {
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="@(()=>OnProyectoSelected.InvokeAsync(Proyecto))">
+                Ver Detalles
+            </MudButton>
+        </MudCardActions>
+    }
+</MudCard>
+
+@code {
+    [Parameter]
+    public Proyecto Proyecto { get; set; } = new Proyecto();
+    [Parameter] public EventCallback<Proyecto> OnProyectoSelected { get; set; }
+    [Parameter] public bool MostrarSeleccionar { get; set; }
+}

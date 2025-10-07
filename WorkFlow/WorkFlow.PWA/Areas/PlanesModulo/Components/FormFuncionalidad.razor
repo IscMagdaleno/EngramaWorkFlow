@@ -9,58 +9,59 @@
 	</MudCardHeader>
 	<MudCardContent>
 
-		@* <EditForm Model="@Data.FuncionalidadesSelected"
+		<EditForm Model="@FuncionalidaSelected"
 				  OnValidSubmit="OnSubmint">
 			<DataAnnotationsValidator />
 
 			<MudFocusTrap>
 
 				<MudGrid>
-					<MudItem sm="6">
-
-
-						<MudTextField @bind-Value="@Data.FuncionalidadesSelected.vchNombre"
-									  Label="Nombre"
-									  MaxLength="100"
-									  Variant="Variant.Outlined" />
-
-
-					</MudItem>
 					<MudItem sm="12">
-						<MudTextField @bind-Value="@Data.FuncionalidadesSelected.nvchDescripcion"
+
+
+						<MudTextField @bind-Value="@FuncionalidaSelected.nvchDescripcion"
 									  Label="Descripción"
 									  Lines="3"
-									  MaxLength="2000"
-									  Variant="Variant.Outlined" />
-
-
-					</MudItem>
-					<MudItem sm="12">
-						<MudTextField @bind-Value="@Data.FuncionalidadesSelected.nvchProceso"
-									  Label="Proceso"
-									  Lines="3"
-									  MaxLength="2000"
-									  Variant="Variant.Outlined" />
-
-					</MudItem>
-
-
-					<MudItem sm="12">
-						<MudTextField @bind-Value="@Data.FuncionalidadesSelected.vchComponentes"
-									  Label="Componentes a Mostrar"
 									  MaxLength="1000"
 									  Variant="Variant.Outlined" />
 
 
 					</MudItem>
 					<MudItem sm="12">
-						<MudTextField @bind-Value="@Data.FuncionalidadesSelected.nvchDatosMovidos"
+						<MudTextField @bind-Value="@FuncionalidaSelected.nvchEntidades"
 									  Label="Entidades"
+									  MaxLength="400"
+									  Variant="Variant.Outlined" />
+
+
+					</MudItem>
+					<MudItem sm="12">
+						<MudTextField @bind-Value="@FuncionalidaSelected.nvchInteracciones"
+									  Label="Interacciones"
+									  MaxLength="1000"
+									  Variant="Variant.Outlined" />
+
+
+					</MudItem>
+
+					<MudItem sm="12">
+						<MudTextField @bind-Value="@FuncionalidaSelected.nvchTecnico"
+									  Label="Técnico"
 									  MaxLength="2000"
 									  Variant="Variant.Outlined" />
 
 
 					</MudItem>
+
+					<MudItem sm="12">
+						<MudTextField @bind-Value="@FuncionalidaSelected.nvchConsideraciones"
+									  Label="Consideraciones"
+									  MaxLength="2000"
+									  Variant="Variant.Outlined" />
+
+
+					</MudItem>
+
 
 					<MudItem sm="12">
 						<MudButton Variant="Variant.Filled"
@@ -70,7 +71,7 @@
 					</MudItem>
 				</MudGrid>
 			</MudFocusTrap> 
-		</EditForm>*@
+		</EditForm>
 	</MudCardContent>
 
 

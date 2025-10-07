@@ -16,7 +16,7 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 		{
 			Loading.Show();
 
-			await Data.PostGetPlanTrabajo();
+			await Data.PostGetPlanTrabajo(-1);
 
 			Loading.Hide();
 

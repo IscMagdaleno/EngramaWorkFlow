@@ -57,6 +57,12 @@ namespace WorkFlow.PWA.Areas.PlanesModulo.Components
 
 		}
 
+		private async Task OnInfoSaved()
+		{
+			await Task.Delay(1);
+			StateHasChanged();
+		}
+
 
 	}
 }

@@ -51,3 +51,5 @@ SET NOCOUNT ON
 	DROP TABLE #Result;
 	END
 GO
+
+exec spGetProyecto -1

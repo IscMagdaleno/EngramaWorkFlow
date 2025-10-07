@@ -1,20 +1,42 @@
 ﻿@using WorkFlow.Share.Objetos.Planes
+@inherits EngramaComponent
+
 
 <MudCard Elevation="3" Class="ma-4">
 	<MudCardHeader>
 		<CardHeaderContent>
 			<MudText Typo="Typo.body1" Color="Color.Secondary">@ModuloSelected?.iIdModulo</MudText>
-			<MudText Typo="Typo.h6">@ModuloSelected?.vchTitulo</MudText>
-			<MudText Typo="Typo.body2">@ModuloSelected?.nvchProposito</MudText>
-		</CardHeaderContent>
 
+		</CardHeaderContent>
+		<CardHeaderActions>
+			@if (MostrarFormModulo)
+			{
+				<MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Color="Color.Error" OnClick="OnClickFormModulo" />
+			}
+			else
+			{
+				<MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" OnClick="OnClickFormModulo" />
+			}
+		</CardHeaderActions>
 	</MudCardHeader>
 	<MudCardContent>
 		<MudGrid>
+
+			<MudItem sm="12">
+				@if (MostrarFormModulo)
+				{
+					<FormModulo ModuloSelected="ModuloSelected" OnModuloSaved="OnModuloSaved"></FormModulo>
+				}
+				else
+				{
+					<MudText Typo="Typo.h6">@ModuloSelected?.vchTitulo</MudText>
+					<MudText Typo="Typo.body2">@ModuloSelected?.nvchProposito</MudText>
+				}
+			</MudItem>
 			<MudItem sm="12">
 				@foreach (var item in ModuloSelected.LstFuncionalidades)
 				{
-					<CardFuncionalidad Funcionalidad="item"></CardFuncionalidad>
+					<CardFuncionalidad Funcionalidad="item" OnFuncionalidadSelected="OnFuncionalidadSelected"></CardFuncionalidad>
 				}
 			</MudItem>
 		</MudGrid>
@@ -24,7 +46,3 @@
 
 </MudCard>
 
-@code 
-{
-	[Parameter] public Modulo? ModuloSelected { get; set; }
-}
