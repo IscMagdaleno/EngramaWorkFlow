@@ -1,0 +1,39 @@
+﻿@using WorkFlow.PWA.Areas.PlanesModulo.Components
+@inherits EngramaComponent
+
+
+<MudGrid>
+
+	<MudItem sm="12">
+		@if (MostrarProyecto.False())
+		{
+			<MudGrid>
+				@foreach (var proyecto in Data.LstProyectos)
+				{
+					<MudItem sm="4">
+						<CardProyecto Proyecto="proyecto" OnProyectoSelected="OnProyectoSelected" MostrarSeleccionar="true" />
+					</MudItem>
+				}
+			</MudGrid>
+		}
+		else
+		{
+
+			<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+				<MudTabPanel Text="Plan de Trabajo">
+
+					<GridPlanTrabajo PlanTrabajo="Data.PlanTrabajoSelected"></GridPlanTrabajo>
+				</MudTabPanel>
+				<MudTabPanel Text="Proceso">
+
+					<GridProyecto Proyecto="Data.ProyectoSelected"></GridProyecto>
+
+				</MudTabPanel>
+
+			</MudTabs>
+		}
+
+
+	</MudItem>
+
+</MudGrid>

@@ -1,0 +1,165 @@
+﻿@using WorkFlow.Share.Objetos.Planes;
+
+@inject ISnackbar Snackbar
+
+<!-- Encabezado del Chat -->
+<MudPaper Elevation="0" Class="pa-3 d-flex align-center" Style="border-bottom: 1px solid var(--mud-palette-divider);">
+	<MudAvatar Color="Color.Primary" Size="Size.Medium" Class="mr-3">
+		<MudIcon Icon="@Icons.Material.Filled.SmartToy" />
+	</MudAvatar>
+	<div>
+		<MudText Typo="Typo.h6">Asistente de Desarrollo</MudText>
+		<MudText Typo="Typo.caption" Color="Color.Default">
+			Paso @Paso.smNumeroSecuencia - @Fase.nvchTitulo
+		</MudText>
+	</div>
+	<MudSpacer />
+	<MudIconButton Icon="@Icons.Material.Filled.Refresh"
+				   Color="Color.Default"
+				   OnClick="LimpiarChat"
+				   Title="Nueva conversación" />
+	<MudIconButton Icon="@Icons.Material.Filled.MoreVert"
+				   Color="Color.Default"
+				   Title="Opciones" />
+</MudPaper>
+
+<!-- Área de Mensajes -->
+<div @ref="chatContainer"
+	 class="flex-grow-1 pa-4"
+	 style="overflow-y: auto; background-color: var(--mud-palette-background-grey);">
+	@if (!mensajes.Any())
+	{
+		<div class="text-center pa-8">
+			<MudIcon Icon="@Icons.Material.Filled.Chat"
+					 Style="font-size: 3rem;"
+					 Color="Color.Default"
+					 Class="mb-3" />
+			<MudText Typo="Typo.h6" Class="mb-2">
+				Inicia la conversación
+			</MudText>
+			<MudText Typo="Typo.body2" Color="Color.Default">
+				Pregunta lo que necesites sobre: @Paso.nvchDescripcion
+			</MudText>
+		</div>
+	}
+	else
+	{
+		@foreach (var mensaje in mensajes)
+		{
+			<div class="@GetMessageClass(mensaje.EsUsuario) mb-3">
+				<div class="d-flex @(mensaje.EsUsuario ? "justify-end" : "justify-start")">
+					@if (!mensaje.EsUsuario)
+					{
+						<MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-2">
+							<MudIcon Icon="@Icons.Material.Filled.SmartToy" Size="Size.Small" />
+						</MudAvatar>
+					}
+
+					<MudPaper Elevation="1"
+							  Class="pa-3"
+							  Style="@GetMessageStyle(mensaje.EsUsuario)">
+						@if (mensaje.EsUsuario)
+						{
+							<!-- Mensajes del usuario: texto simple -->
+							<MudText Typo="Typo.body2" Style="white-space: pre-wrap;">
+								@mensaje.Contenido
+							</MudText>
+						}
+						else
+						{
+							<!-- Mensajes del asistente: renderizar Markdown -->
+							<div class="markdown-content">
+								@((MarkupString)ConvertirMarkdownAHtml(mensaje.Contenido))
+							</div>
+						}
+						<MudText Typo="Typo.caption"
+								 Class="mt-2"
+								 Style="@(mensaje.EsUsuario ? "color: rgba(255,255,255,0.7);" : "")">
+							@mensaje.Timestamp.ToString("HH:mm")
+						</MudText>
+					</MudPaper>
+
+					@if (mensaje.EsUsuario)
+					{
+						<MudAvatar Color="Color.Secondary" Size="Size.Small" Class="ml-2">
+							<MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
+						</MudAvatar>
+					}
+				</div>
+			</div>
+		}
+
+		@if (esperandoRespuesta)
+		{
+			<div class="d-flex justify-start mb-3">
+				<MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-2">
+					<MudIcon Icon="@Icons.Material.Filled.SmartToy" Size="Size.Small" />
+				</MudAvatar>
+				<MudPaper Elevation="1" Class="pa-3">
+					<div class="d-flex align-center">
+						<MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+						<MudText Typo="Typo.body2">Escribiendo...</MudText>
+					</div>
+				</MudPaper>
+			</div>
+		}
+	}
+</div>
+
+<!-- Área de Entrada -->
+<MudPaper Elevation="0" Class="pa-3" Style="border-top: 1px solid var(--mud-palette-divider);">
+	<div class="d-flex gap-2">
+		<MudTextField @bind-Value="mensajeActual"
+					  Placeholder="Escribe tu mensaje..."
+					  Variant="Variant.Outlined"
+					  Lines="1"
+					  MaxLines="4"
+					  FullWidth="true"
+					  OnKeyDown="HandleKeyDown"
+					  Disabled="@esperandoRespuesta"
+					  Immediate="true"
+					  Class="flex-grow-1" />
+
+		<MudIconButton Icon="@Icons.Material.Filled.AttachFile"
+					   Color="Color.Default"
+					   Disabled="@esperandoRespuesta"
+					   Title="Adjuntar archivo" />
+
+		<MudButton Variant="Variant.Filled"
+				   Color="Color.Primary"
+				   EndIcon="@Icons.Material.Filled.Send"
+				   OnClick="EnviarMensaje"
+				   Disabled="@(string.IsNullOrWhiteSpace(mensajeActual) || esperandoRespuesta)">
+			Enviar
+		</MudButton>
+	</div>
+
+	<!-- Sugerencias rápidas -->
+	@if (!mensajes.Any())
+	{
+		<div class="mt-3">
+			<MudText Typo="Typo.caption" Class="mb-2">Sugerencias:</MudText>
+			<div class="d-flex gap-2 flex-wrap">
+				<MudChip T="string" Size="Size.Small"
+						 OnClick="@(() => UsarSugerencia("¿Cómo empiezo con este paso?"))"
+						 Variant="Variant.Outlined">
+					¿Cómo empiezo?
+				</MudChip>
+				<MudChip T="string" Size="Size.Small"
+						 OnClick="@(() => UsarSugerencia("Dame ejemplos de código para este paso"))"
+						 Variant="Variant.Outlined">
+					Ejemplos de código
+				</MudChip>
+				<MudChip T="string" Size="Size.Small"
+						 OnClick="@(() => UsarSugerencia("¿Cuáles son las mejores prácticas?"))"
+						 Variant="Variant.Outlined">
+					Mejores prácticas
+				</MudChip>
+			</div>
+		</div>
+	}
+</MudPaper>
+
+@code {
+
+}

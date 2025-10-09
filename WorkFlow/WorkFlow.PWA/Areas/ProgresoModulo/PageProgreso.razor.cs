@@ -1,5 +1,6 @@
 ﻿using WorkFlow.PWA.Areas.ProgresoModulo.Utiles;
 using WorkFlow.PWA.Shared.Common;
+using WorkFlow.Share.Objetos.Planes;
 
 namespace WorkFlow.PWA.Areas.ProgresoModulo
 {
@@ -14,10 +15,12 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo
 			Data = new MainProgreso(httpService, mapperHelper, validaServicioService);
 		}
 
-
-		private void OnPlanSelected()
+		private void EC_OnProyectoSelecionado(Proyecto proyecto)
 		{
 			MostrarProgresoPlan = true;
+
+
 		}
+
 	}
 }

@@ -19,13 +19,14 @@
 			{
 
 				<MudItem sm="12">
-					<GridPlanes Data="Data" OnPlanSelected="OnPlanSelected"></GridPlanes>
+					<ConsultaPlanesProgreso Data="@Data"
+											EC_OnProyectoSelecionado="EC_OnProyectoSelecionado" />
 				</MudItem>
 			}
 			else
 			{
 				<MudItem sm="12">
-					<GridModulos Data="Data"></GridModulos>
+					<ProgresoProyeto Data="@Data"></ProgresoProyeto>
 				</MudItem>
 
 			}
