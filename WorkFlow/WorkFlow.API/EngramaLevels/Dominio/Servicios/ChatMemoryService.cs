@@ -20,7 +20,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 			_responseHelper = responseHelper;
 		}
 
-		public async Task<Response<Chat>> GetChatPorFuncionalidad(int iIdFuncionalidad, string nvchContenido, string systemPrompt)
+		public async Task<Response<Chat>> GetChatPorFase(int iIdFase, string nvchContenido, string systemPrompt)
 		{
 
 			var data = new Response<Chat>();
@@ -29,7 +29,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 			{
 				var chat = new Chat();
 
-				var chatResponse = await _procesoRepository.spGetChat(new spGetChat.Request { iIdFuncionalidad = iIdFuncionalidad });
+				var chatResponse = await _procesoRepository.spGetChat(new spGetChat.Request { iIdFase = iIdFase });
 				var validationchatResponse = _responseHelper.Validacion<spGetChat.Result, Chat>(chatResponse);
 
 				if (validationchatResponse.IsSuccess)
@@ -43,8 +43,8 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 				{
 					var saveChatModel = new spSaveChat.Request
 					{
-						iIdFuncionalidad = iIdFuncionalidad,
-						nvchNombre = $"Chat para Funcionalidad {iIdFuncionalidad}",
+						iIdFase = iIdFase,
+						nvchNombre = $"Chat para Fase {iIdFase}",
 						dtFechaCreacion = DateTime.Now,
 					};
 
@@ -54,9 +54,9 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 					{
 						validationchatResponse.Data.iIdChat = validationcreateResponse.Data.iIdChat;
 						chat.iIdChat = validationcreateResponse.Data.iIdChat;
-						chat.iIdFuncionalidad = iIdFuncionalidad;
-						chat.nvchNombre = $"Chat para Funcionalidad {iIdFuncionalidad}";
-						chat.dtFechaCreacion = DateTime.Now;
+						chat.iIdFase = saveChatModel.iIdFase;
+						chat.nvchNombre = saveChatModel.nvchNombre; ;
+						chat.dtFechaCreacion = saveChatModel.dtFechaCreacion;
 
 
 					}
@@ -151,11 +151,11 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 
 		}
 
-		public async Task<Response<Chat>> GuardarRespuestaLLM(ChatCompletion chatCompletion, Chat chat)
+		public async Task<Response<Mensaje>> GuardarRespuestaLLM(ChatCompletion chatCompletion, Chat chat)
 		{
-			var response = new Response<Chat>();
+			var response = new Response<Mensaje>();
 			response.IsSuccess = false;
-			response.Data = chat;
+			response.Data = new Mensaje();
 			var respuestaLLM = chatCompletion.Content[0].Text;
 			if (respuestaLLM.NotEmpty())
 			{
@@ -173,7 +173,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 
 				if (validationSaveMessaje.IsSuccess)
 				{
-					chat.LstMensajes.Add(new Mensaje
+					var mensage = new Mensaje
 					{
 						iIdChat = modelSaveMessaje.iIdChat,
 						dtFecha = modelSaveMessaje.dtFecha,
@@ -181,10 +181,11 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 						iOrden = modelSaveMessaje.iOrden,
 						nvchContenido = modelSaveMessaje.nvchContenido,
 						nvchRol = modelSaveMessaje.nvchRol
-					});
+					};
 
 					response.IsSuccess = true;
-					response.Data = chat;
+					response.Data = mensage;
+					;
 					return response;
 
 				}

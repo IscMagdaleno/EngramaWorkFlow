@@ -3,7 +3,7 @@ IF OBJECT_ID( 'spSaveChat' ) IS NULL
 GO 
 ALTER PROCEDURE spSaveChat (
 @iIdChat INT, 
-@iIdFuncionalidad INT, 
+@iIdFase INT, 
 @dtFechaCreacion DATETIME, 
 @nvchNombre NVARCHAR (200) , 
 @bActivo BIT 
@@ -31,12 +31,12 @@ BEGIN
 	INSERT INTO dbo.Chat
 	 ( 
 
-		iIdFuncionalidad, 			dtFechaCreacion, 			nvchNombre, 	
+		iIdFase, 			dtFechaCreacion, 			nvchNombre, 	
 		bActivo 	
 	)
 	VALUES 
 	(
-		@iIdFuncionalidad,		GETDATE(),		@nvchNombre,
+		@iIdFase,		GETDATE(),		@nvchNombre,
 		1
 	)
 		 SET @iIdChat = @@IDENTITY

@@ -2,7 +2,7 @@ IF OBJECT_ID( 'spGetChat' ) IS NULL
 	EXEC ('CREATE PROCEDURE spGetChat AS SET NOCOUNT ON;') 
 GO 
 ALTER PROCEDURE spGetChat (
-@iIdFuncionalidad INT 
+@iIdFase INT 
 ) 
 AS 
 BEGIN 
@@ -12,7 +12,7 @@ CREATE TABLE #Result (
 	bResult BIT DEFAULT (1),
 	vchMessage VARCHAR(500) DEFAULT(''),
 	 iIdChat INT DEFAULT( -1 ),
-	 iIdFuncionalidad INT DEFAULT( -1 ),
+	 iIdFase INT DEFAULT( -1 ),
 	 dtFechaCreacion DATETIME DEFAULT( '1900-01-01' ),
 	 nvchNombre NVARCHAR (200)  DEFAULT( '' ),
 	 bActivo BIT DEFAULT( 0 ),
@@ -25,13 +25,13 @@ SET NOCOUNT ON
 	INSERT INTO  #Result
 	 ( 
 
-		iIdChat, 			iIdFuncionalidad, 			dtFechaCreacion, 	
+		iIdChat, 			iIdFase, 			dtFechaCreacion, 	
 		nvchNombre, 			bActivo 			)
 		SELECT 
-		 C.iIdChat, 			 C.iIdFuncionalidad, 			 C.dtFechaCreacion, 	
+		 C.iIdChat, 			 C.iIdFase, 			 C.dtFechaCreacion, 	
 				 C.nvchNombre, 			 C.bActivo 	FROM
 		 dbo.Chat C  WITH(NOLOCK)  
-WHERE C.iIdFuncionalidad =@iIdFuncionalidad
+WHERE C.iIdFase =@iIdFase
 
 		IF NOT EXISTS (SELECT 1 FROM #Result)
 			BEGIN

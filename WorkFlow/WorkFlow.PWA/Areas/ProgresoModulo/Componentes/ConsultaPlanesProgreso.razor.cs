@@ -33,7 +33,7 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			if (result.bResult)
 			{
 
-				Data.PlanTrabajoSelected = Data.LstPlanTrabajos.SingleOrDefault();
+				//Data.PlanTrabajoSelected = Data.LstPlanTrabajos.SingleOrDefault();
 				MostrarProyecto = true;
 
 				await EC_OnProyectoSelecionado.InvokeAsync(proyecto);

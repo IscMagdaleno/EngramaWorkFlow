@@ -4,7 +4,9 @@ using EngramaCoreStandar.Results;
 using EngramaCoreStandar.Servicios;
 
 using WorkFlow.Share.Objetos.Planes;
+using WorkFlow.Share.Objetos.Proceso;
 using WorkFlow.Share.PostClass.Planes;
+using WorkFlow.Share.PostClass.Proceso;
 
 namespace WorkFlow.PWA.Areas.ProgresoModulo.Utiles
 {
@@ -13,6 +15,7 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Utiles
 
 
 		private string urlPlanes = @"api/Planes";
+		private string urlProceso = @"api/Proceso";
 
 		private readonly IHttpService _httpService;
 		private readonly MapperHelper _mapper;
@@ -28,6 +31,8 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Utiles
 		public Fases FaseSelected { get; set; }
 		public Paso PasoSelected { get; set; }
 
+		public List<Mensaje> LstMensajes { get; set; }
+
 		public MainProgreso(IHttpService httpService, MapperHelper mapperHelper, IValidaServicioService validaServicioService)
 		{
 			_httpService = httpService;
@@ -41,6 +46,8 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Utiles
 			PasoSelected = new Paso();
 			FaseSelected = new Fases();
 			LstProyectos = new List<Proyecto>();
+
+			LstMensajes = new List<Mensaje>();
 		}
 
 
@@ -68,6 +75,23 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Utiles
 			var response = await _httpService.Post<PostGetProyecto, Response<List<Proyecto>>>(APIUrl, model);
 			var validacion = _validaServicioService.ValidadionServicio(response,
 			onSuccess: data => LstProyectos = data);
+			return validacion;
+		}
+
+		public async Task<SeverityMessage> PostConversacion(string Mensaje)
+		{
+			var APIUrl = urlProceso + "/PostConversacion";
+
+			var model = new PostConversacion
+			{
+				iIdProyecto = ProyectoSelected.iIdProyecto,
+				iIdPlanTrabajo = ProyectoSelected.iIdPlanTrabajo,
+				iIdFase = FaseSelected.iIdFase,
+				nvchContenido = Mensaje
+			};
+			var response = await _httpService.Post<PostConversacion, Response<Mensaje>>(APIUrl, model);
+			var validacion = _validaServicioService.ValidadionServicio(response,
+			onSuccess: data => LstMensajes.Add(data));
 			return validacion;
 		}
 	}

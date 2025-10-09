@@ -7,6 +7,6 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Interfaces
 {
 	public interface IProcesoDominio
 	{
-		Task<Response<Chat>> GetConversation(PostConversacion PostModel);
+		Task<Response<Mensaje>> GetConversation(PostConversacion PostModel);
 	}
 }

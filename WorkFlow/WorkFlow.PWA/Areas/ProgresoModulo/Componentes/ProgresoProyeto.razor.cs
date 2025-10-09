@@ -12,25 +12,17 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 	{
 
 
-		[Parameter]
-		public MainProgreso Data { get; set; }
+		[Parameter] public MainProgreso Data { get; set; }
 
+
+		private MudChip<Fases> selectedFaseChip;
+		private object selectedPasoValue;
 
 		private void OnClickFaseSelected(Fases fase)
 		{
 			Data.FaseSelected = fase;
 		}
 
-		private MudChip<Fases> selectedFaseChip;
-		private object selectedPasoValue;
-
-		private void OnClickFaseSelected(dynamic fase)
-		{
-			Data.FaseSelected = fase;
-			Data.PasoSelected = new Paso(); // Reiniciar paso seleccionado
-			selectedPasoValue = null;
-			StateHasChanged();
-		}
 
 		private void OnClickPasoSelected(dynamic paso)
 		{

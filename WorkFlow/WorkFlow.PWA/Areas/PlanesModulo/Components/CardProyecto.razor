@@ -1,7 +1,4 @@
 ﻿@using WorkFlow.Share.Objetos.Planes
-<h3>CardProyecto</h3>
-
-
 <MudCard>
     <MudCardHeader>
         <CardHeaderContent>
@@ -10,7 +7,7 @@
     </MudCardHeader>
     <MudCardContent>
         <MudText Typo="Typo.body1" Class="mb-4">
-            @((Proyecto.nvchDescripcion)))
+            @((Proyecto.nvchDescripcion))
         </MudText>
         <MudText Typo="Typo.caption">
             Creado: @(Proyecto.dtCreadoEn.ToString("g") ?? "N/A")

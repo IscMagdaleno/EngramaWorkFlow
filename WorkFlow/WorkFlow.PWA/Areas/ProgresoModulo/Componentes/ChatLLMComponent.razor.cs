@@ -6,31 +6,34 @@ using Microsoft.JSInterop;
 
 using MudBlazor;
 
+using WorkFlow.PWA.Areas.ProgresoModulo.Utiles;
+using WorkFlow.PWA.Shared.Common;
+using WorkFlow.Share.Objetos.Proceso;
+
 namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 {
-	public partial class ChatLLMComponent
+	public partial class ChatLLMComponent : EngramaComponent
 	{
 		[Inject] public IJSRuntime JSRuntime { get; set; }
-		[Parameter] public dynamic Paso { get; set; }
-		[Parameter] public dynamic Fase { get; set; }
-		[Parameter] public dynamic Proyecto { get; set; }
+		[Parameter] public MainProgreso Data { get; set; }
 
-		private List<MensajeChat> mensajes = new();
+
 		private string mensajeActual = "";
+
 		private bool esperandoRespuesta = false;
 		private ElementReference chatContainer;
 
-		public class MensajeChat
-		{
-			public string Contenido { get; set; }
-			public bool EsUsuario { get; set; }
-			public DateTime Timestamp { get; set; }
-		}
+
 
 		private static MarkdownPipeline pipeline;
 
+
+
 		protected override void OnInitialized()
 		{
+
+
+
 			// Configurar el pipeline de Markdown
 			if (pipeline == null)
 			{
@@ -41,22 +44,13 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			}
 		}
 
+		private bool EsUsuario(Mensaje mensaje)
+		{
+			return (mensaje.nvchRol == "user");
+		}
+
 		protected override async Task OnAfterRenderAsync(bool firstRender)
 		{
-			if (firstRender)
-			{
-				// Mensaje de bienvenida del asistente
-				await Task.Delay(500);
-				mensajes.Add(new MensajeChat
-				{
-					Contenido = $"¡Hola! Estoy aquí para ayudarte con el Paso {Paso.smNumeroSecuencia}.\n\n" +
-								$"Descripción: {Paso.nvchDescripcion}\n\n" +
-								$"¿En qué puedo asistirte?",
-					EsUsuario = false,
-					Timestamp = DateTime.Now
-				});
-				StateHasChanged();
-			}
 
 			// Hacer scroll al final después de cada render
 			try
@@ -73,31 +67,11 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 		{
 			if (string.IsNullOrWhiteSpace(mensajeActual)) return;
 
-			// Agregar mensaje del usuario
-			mensajes.Add(new MensajeChat
-			{
-				Contenido = mensajeActual,
-				EsUsuario = true,
-				Timestamp = DateTime.Now
-			});
 
-			var mensajeEnviado = mensajeActual;
-			mensajeActual = "";
 			esperandoRespuesta = true;
-			StateHasChanged();
 
-			// Simular respuesta del LLM (aquí debes integrar tu API real)
-			await Task.Delay(1500);
+			await ObtenerRespuestaLLM(mensajeActual);
 
-			// TODO: Aquí debe ir la llamada real a tu servicio LLM
-			var respuestaLLM = await ObtenerRespuestaLLM(mensajeEnviado);
-
-			mensajes.Add(new MensajeChat
-			{
-				Contenido = respuestaLLM,
-				EsUsuario = false,
-				Timestamp = DateTime.Now
-			});
 
 			esperandoRespuesta = false;
 			StateHasChanged();
@@ -119,52 +93,29 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			}
 		}
 
-		private async Task<string> ObtenerRespuestaLLM(string mensaje)
+		private async Task ObtenerRespuestaLLM(string mensaje)
 		{
 			try
 			{
-				// Construir el contexto del proyecto
-				//				var contexto = $@"Proyecto: {Proyecto.nvchNombre}
-				//Fase: {Fase.nvchTitulo}
-				//Paso {Paso.smNumeroSecuencia}: {Paso.nvchDescripcion}
-				//Propósito: {Paso.nvchProposito}
-				//Características: {Paso.nvchCaracteristicas}
-				//Enfoque: {Paso.nvchEnfoque}";
+				var result = await Data.PostConversacion(mensaje);
+				ShowSnake(result);
+				if (result.bResult)
+				{
+					StateHasChanged();
+					await Task.Delay(1);
+				}
 
-				//				// Convertir mensajes previos al formato del servicio
-				//				var historial = mensajes
-				//					.Where(m => !string.IsNullOrEmpty(m.Contenido))
-				//					.Select(m => new MensajeHistorial
-				//					{
-				//						Rol = m.EsUsuario ? "user" : "assistant",
-				//						Contenido = m.Contenido
-				//					})
-				//					.ToList();
 
-				//				// Llamar al servicio LLM
-				//				//var respuesta = await LLMService.EnviarMensajeAsync(contexto, mensaje, historial);
-				//				return respuesta;
-
-				return mensaje;
 			}
 			catch (Exception ex)
 			{
 				Snackbar.Add($"Error al comunicarse con el asistente: {ex.Message}", Severity.Error);
-				return "Lo siento, no pude procesar tu mensaje. Por favor, intenta de nuevo.";
 			}
 		}
 
 		private void UsarSugerencia(string sugerencia)
 		{
 			mensajeActual = sugerencia;
-			StateHasChanged();
-		}
-
-		private void LimpiarChat()
-		{
-			mensajes.Clear();
-			mensajeActual = "";
-			esperandoRespuesta = false;
 			StateHasChanged();
 		}
 

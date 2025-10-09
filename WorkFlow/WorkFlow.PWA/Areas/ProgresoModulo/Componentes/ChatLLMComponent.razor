@@ -1,5 +1,5 @@
 ﻿@using WorkFlow.Share.Objetos.Planes;
-
+@inherits EngramaComponent
 @inject ISnackbar Snackbar
 
 <!-- Encabezado del Chat -->
@@ -10,24 +10,24 @@
 	<div>
 		<MudText Typo="Typo.h6">Asistente de Desarrollo</MudText>
 		<MudText Typo="Typo.caption" Color="Color.Default">
-			Paso @Paso.smNumeroSecuencia - @Fase.nvchTitulo
+			Paso @Data.PasoSelected.smNumeroSecuencia - @Data.FaseSelected.nvchTitulo
 		</MudText>
 	</div>
-	<MudSpacer />
+@* 	<MudSpacer />
 	<MudIconButton Icon="@Icons.Material.Filled.Refresh"
 				   Color="Color.Default"
 				   OnClick="LimpiarChat"
 				   Title="Nueva conversación" />
 	<MudIconButton Icon="@Icons.Material.Filled.MoreVert"
 				   Color="Color.Default"
-				   Title="Opciones" />
+				   Title="Opciones" /> *@
 </MudPaper>
 
 <!-- Área de Mensajes -->
 <div @ref="chatContainer"
 	 class="flex-grow-1 pa-4"
 	 style="overflow-y: auto; background-color: var(--mud-palette-background-grey);">
-	@if (!mensajes.Any())
+	@if (!Data.LstMensajes.Any())
 	{
 		<div class="text-center pa-8">
 			<MudIcon Icon="@Icons.Material.Filled.Chat"
@@ -38,17 +38,17 @@
 				Inicia la conversación
 			</MudText>
 			<MudText Typo="Typo.body2" Color="Color.Default">
-				Pregunta lo que necesites sobre: @Paso.nvchDescripcion
+				Pregunta lo que necesites sobre: @Data.PasoSelected.nvchDescripcion
 			</MudText>
 		</div>
 	}
 	else
 	{
-		@foreach (var mensaje in mensajes)
+		@foreach (var mensaje in Data.LstMensajes)
 		{
-			<div class="@GetMessageClass(mensaje.EsUsuario) mb-3">
-				<div class="d-flex @(mensaje.EsUsuario ? "justify-end" : "justify-start")">
-					@if (!mensaje.EsUsuario)
+			<div class="@GetMessageClass(EsUsuario(mensaje)) mb-3">
+				<div class="d-flex @(EsUsuario(mensaje) ? "justify-end" : "justify-start")">
+					@if (!EsUsuario(mensaje))
 					{
 						<MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-2">
 							<MudIcon Icon="@Icons.Material.Filled.SmartToy" Size="Size.Small" />
@@ -57,29 +57,29 @@
 
 					<MudPaper Elevation="1"
 							  Class="pa-3"
-							  Style="@GetMessageStyle(mensaje.EsUsuario)">
-						@if (mensaje.EsUsuario)
+							  Style="@GetMessageStyle(EsUsuario(mensaje))">
+						@if (EsUsuario(mensaje))
 						{
 							<!-- Mensajes del usuario: texto simple -->
 							<MudText Typo="Typo.body2" Style="white-space: pre-wrap;">
-								@mensaje.Contenido
+								@mensaje.nvchContenido
 							</MudText>
 						}
 						else
 						{
 							<!-- Mensajes del asistente: renderizar Markdown -->
 							<div class="markdown-content">
-								@((MarkupString)ConvertirMarkdownAHtml(mensaje.Contenido))
+								@((MarkupString)ConvertirMarkdownAHtml(mensaje.nvchContenido))
 							</div>
 						}
 						<MudText Typo="Typo.caption"
 								 Class="mt-2"
-								 Style="@(mensaje.EsUsuario ? "color: rgba(255,255,255,0.7);" : "")">
-							@mensaje.Timestamp.ToString("HH:mm")
+								 Style="@(EsUsuario(mensaje) ? "color: rgba(255,255,255,0.7);" : "")">
+							@mensaje.dtFecha.ToDateTime().ToString("HH:mm")
 						</MudText>
 					</MudPaper>
 
-					@if (mensaje.EsUsuario)
+					@if (EsUsuario(mensaje))
 					{
 						<MudAvatar Color="Color.Secondary" Size="Size.Small" Class="ml-2">
 							<MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
@@ -113,17 +113,13 @@
 					  Placeholder="Escribe tu mensaje..."
 					  Variant="Variant.Outlined"
 					  Lines="1"
-					  MaxLines="4"
+					  MaxLines="8"
 					  FullWidth="true"
 					  OnKeyDown="HandleKeyDown"
 					  Disabled="@esperandoRespuesta"
 					  Immediate="true"
 					  Class="flex-grow-1" />
 
-		<MudIconButton Icon="@Icons.Material.Filled.AttachFile"
-					   Color="Color.Default"
-					   Disabled="@esperandoRespuesta"
-					   Title="Adjuntar archivo" />
 
 		<MudButton Variant="Variant.Filled"
 				   Color="Color.Primary"
@@ -135,7 +131,7 @@
 	</div>
 
 	<!-- Sugerencias rápidas -->
-	@if (!mensajes.Any())
+	@if (!Data.LstMensajes.Any())
 	{
 		<div class="mt-3">
 			<MudText Typo="Typo.caption" Class="mb-2">Sugerencias:</MudText>

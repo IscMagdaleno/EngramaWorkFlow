@@ -8,7 +8,7 @@ namespace WorkFlow.Share.Entity.Proceso
 		{
 			public string StoredProcedure { get => "spSaveChat"; }
 			public int iIdChat { get; set; }
-			public int iIdFuncionalidad { get; set; }
+			public int iIdFase { get; set; }
 			public DateTime? dtFechaCreacion { get; set; }
 			public string nvchNombre { get; set; }
 			public bool bActivo { get; set; }

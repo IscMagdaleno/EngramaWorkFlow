@@ -29,7 +29,7 @@
 	@if (Data.FaseSelected?.iIdFase > 0)
 	{
 		<!-- Panel dividido: Pasos a la izquierda, Chat a la derecha -->
-		<MudItem xs="12" md="4">
+		<MudItem xs="12" md="3">
 			<MudPaper Elevation="2" Class="pa-4" Style="height: calc(100vh - 350px); overflow-y: auto;">
 				<MudText Typo="Typo.h6" Class="mb-3">
 					<MudIcon Icon="@Icons.Material.Filled.FormatListNumbered" Class="mr-2" />
@@ -82,12 +82,10 @@
 			</MudPaper>
 		</MudItem>
 
-		<MudItem xs="12" md="8">
+		<MudItem xs="12" md="9">
 			@if (Data.PasoSelected?.iIdPaso > 0)
 			{
-				 <ChatLLMComponent Paso="@Data.PasoSelected" 
-								  Fase="@Data.FaseSelected"
-								  Proyecto="@Data.ProyectoSelected" /> 
+				 <ChatLLMComponent Data="@Data"  /> 
 			}
 			else
 			{

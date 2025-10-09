@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json;
 
 using WorkFlow.Share.Objetos.Planes;
 using WorkFlow.Share.PostClass.Proceso;
@@ -9,28 +10,44 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles
 	{
 
 
-		public static string FuncialidadPrompt(PostConversacion postModel, PlanTrabajo planTrabajo)
+		public static string FuncialidadPrompt(PostConversacion postModel, Proyecto proyecto, PlanTrabajo plan)
 		{
 
 			var promot = new StringBuilder();
 
 			promot.AppendLine(@" Eres un arquitecto de software experto en aplicaciones web con .NET, Clean Architecture, SQL Server y Blazor/MudBlazor. 
-				Tu tarea es desglosar aplicaciones en módulos funcionales según Domain-Driven Design (DDD) y principios SOLID.");
+				Tu tarea es ayudar en el desarrollo de la aplicación implementando las mejores practicas con patrones de diseño y principios SOLID.");
 
 
-			promot.AppendLine($"La aplicación tiene por nombre :  {planTrabajo.vchNombre}");
-			promot.AppendLine($"La cual consiste en lo siguiente :  {planTrabajo.nvchDescripcion}");
+			promot.AppendLine($"La aplicación tiene por nombre :  {proyecto.nvchNombre}");
+			promot.AppendLine($"La cual consiste en lo siguiente :  {proyecto.nvchDescripcion}");
 
-			var modulo = planTrabajo.LstModulos.SingleOrDefault(e => e.iIdModulo == postModel.iIdModulo);
-			promot.AppendLine($"Justo se esta trabajando en el siguiente modulo {modulo.vchTitulo}, con propósito {modulo.nvchProposito}.");
+			promot.AppendLine($"En el siguiente Json te envió todos los módulos y funcionalidades de la aplicación");
 
-			var funcionalidad = modulo.LstFuncionalidades.SingleOrDefault(e => e.iIdFuncionalidad == postModel.iIdFuncionalidad);
+			promot.AppendLine($"");
+			var json = JsonSerializer.Serialize(plan);
+			promot.AppendLine(json);
 
-			promot.AppendLine($"Para ser especifico en la funcionalidad: {funcionalidad.nvchDescripcion}");
-			promot.AppendLine($"Actuara con las siguientes tablas: {funcionalidad.nvchEntidades}.");
-			promot.AppendLine($"Tendrá las siguientes interacciones: {funcionalidad.nvchInteracciones}.");
-			promot.AppendLine($"Teniendo en cuenta los aspecto técnicos: {funcionalidad.nvchTecnico}.");
-			promot.AppendLine($"Teniendo en cuenta las siguientes consideraciones: {funcionalidad.nvchConsideraciones}.");
+			promot.AppendLine($"");
+
+			promot.AppendLine($"El proceso fue separado en Fases, y pasos.");
+
+			var modulo = proyecto.fases.SingleOrDefault(e => e.iIdFase == postModel.iIdFase);
+			promot.AppendLine($"Justo se esta trabajando en el siguiente fase {modulo.nvchTitulo}, con propósito {modulo.nvchDescripcion}.");
+
+			promot.AppendLine($"Esta fase consta de varios pasos, los cuales se describen a continuación");
+
+			foreach (var paso in modulo.pasos)
+			{
+				promot.AppendLine($"Paso en secuencia numero: {paso.smNumeroSecuencia}.");
+				promot.AppendLine($"Descripción: {paso.nvchDescripcion}.");
+				promot.AppendLine($"Propósito: {paso.nvchProposito}.");
+				promot.AppendLine($"Características: {paso.nvchCaracteristicas}.");
+				promot.AppendLine($"Enfoque: {paso.nvchEnfoque}.");
+
+			}
+
+
 
 
 			return promot.ToString();

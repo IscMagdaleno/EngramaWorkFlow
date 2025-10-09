@@ -7,6 +7,7 @@ using WorkFlow.API.EngramaLevels.Dominio.Servicios;
 using WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles;
 using WorkFlow.API.EngramaLevels.Infrastructure.Interfaces;
 using WorkFlow.Share.Objetos.Proceso;
+using WorkFlow.Share.PostClass.Planes;
 using WorkFlow.Share.PostClass.Proceso;
 
 namespace WorkFlow.API.EngramaLevels.Dominio.Core
@@ -42,20 +43,26 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 
 
 
-		public async Task<Response<Chat>> GetConversation(PostConversacion PostModel)
+		public async Task<Response<Mensaje>> GetConversation(PostConversacion PostModel)
 		{
 			try
 			{
-				var resultado = new Response<Chat>();
+				var resultado = new Response<Mensaje>();
 
-				var resultPlan = await _planesDominio.GetPlanTrabajo(new Share.PostClass.Planes.PostGetPlanTrabajo { iIdPlanTrabajo = PostModel.iIdPlanTrabajo });
-				if (resultPlan.IsSuccess)
+				var resultProyecto = await _planesDominio.GetProyecto(new PostGetProyecto { iIdProyecto = PostModel.iIdProyecto });
+				var resultPlan = await _planesDominio.GetPlanTrabajo(new PostGetPlanTrabajo { iIdPlanTrabajo = PostModel.iIdPlanTrabajo });
+
+
+				if (resultProyecto.IsSuccess && resultPlan.IsSuccess)
 				{
 
-					var plan = resultPlan.Data.FirstOrDefault();
-					var systemPrompt = GeneraPrompts.FuncialidadPrompt(PostModel, plan);
+					var proyect = resultProyecto.Data.SingleOrDefault();
+					var plan = resultPlan.Data.SingleOrDefault();
 
-					var ResponseChat = await _chatMemoryService.GetChatPorFuncionalidad(PostModel.iIdFuncionalidad, PostModel.nvchContenido, systemPrompt);
+
+					var systemPrompt = GeneraPrompts.FuncialidadPrompt(PostModel, proyect, plan);
+
+					var ResponseChat = await _chatMemoryService.GetChatPorFase(PostModel.iIdFase, PostModel.nvchContenido, systemPrompt);
 					if (ResponseChat.IsSuccess)
 					{
 
@@ -73,7 +80,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 			}
 			catch (Exception ex)
 			{
-				return Response<Chat>.BadResult(ex.Message, new());
+				return Response<Mensaje>.BadResult(ex.Message, new());
 			}
 		}
 
