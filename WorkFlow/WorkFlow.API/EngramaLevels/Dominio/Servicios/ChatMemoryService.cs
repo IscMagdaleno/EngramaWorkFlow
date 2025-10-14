@@ -3,9 +3,13 @@ using EngramaCoreStandar.Results;
 
 using OpenAI.Chat;
 
+using WorkFlow.API.EngramaLevels.Dominio.Interfaces;
+using WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles;
 using WorkFlow.API.EngramaLevels.Infrastructure.Interfaces;
 using WorkFlow.Share.Entity.Proceso;
 using WorkFlow.Share.Objetos.Proceso;
+using WorkFlow.Share.PostClass.Planes;
+using WorkFlow.Share.PostClass.Proceso;
 
 namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 {
@@ -13,18 +17,24 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 	{
 		private readonly IProcesoRepository _procesoRepository;
 		private readonly IResponseHelper _responseHelper;
+		private readonly IPlanesDominio _planesDominio;
 
-		public ChatMemoryService(IProcesoRepository procesoRepository, IResponseHelper responseHelper)
+		public ChatMemoryService(IProcesoRepository procesoRepository,
+		IResponseHelper responseHelper,
+		IPlanesDominio planesDominio)
 		{
 			_procesoRepository = procesoRepository;
 			_responseHelper = responseHelper;
+			_planesDominio = planesDominio;
 		}
 
-		public async Task<Response<Chat>> GetChatPorFase(int iIdFase, string nvchContenido, string systemPrompt)
+
+
+		public async Task<Response<Chat>> GetChatPorFase(PostConversacion PostModel)
 		{
 
 			var data = new Response<Chat>();
-
+			var iIdFase = PostModel.iIdFase;
 			try
 			{
 				var chat = new Chat();
@@ -72,30 +82,46 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 				else
 				{
 
-					var modelSaveMessaje = new spSaveMensaje.Request
-					{
-						iIdChat = chat.iIdChat,
-						dtFecha = DateTime.Now,
-						iIdMensaje = -1,
-						iOrden = 1,
-						nvchContenido = systemPrompt,
-						nvchRol = "system"
-					};
-					var resiltSaveMessaje = await _procesoRepository.spSaveMensaje(modelSaveMessaje);
-					var validationSaveMessaje = _responseHelper.Validacion<spSaveMensaje.Result, Mensaje>(resiltSaveMessaje);
+					var resultProyecto = await _planesDominio.GetProyecto(new PostGetProyecto { iIdProyecto = PostModel.iIdProyecto });
+					var resultPlan = await _planesDominio.GetPlanTrabajo(new PostGetPlanTrabajo { iIdPlanTrabajo = PostModel.iIdPlanTrabajo });
 
-					if (validationSaveMessaje.IsSuccess)
+
+					if (resultProyecto.IsSuccess && resultPlan.IsSuccess)
 					{
-						chat.LstMensajes.Add(new Mensaje
+
+						var proyect = resultProyecto.Data.SingleOrDefault();
+						var plan = resultPlan.Data.SingleOrDefault();
+
+
+
+						var systemPrompt = GeneraPrompts.FuncialidadPrompt(PostModel, proyect, plan);
+
+
+						var modelSaveMessaje = new spSaveMensaje.Request
 						{
-							iIdChat = modelSaveMessaje.iIdChat,
-							dtFecha = modelSaveMessaje.dtFecha,
-							iIdMensaje = validationSaveMessaje.Data.iIdMensaje,
+							iIdChat = chat.iIdChat,
+							dtFecha = DateTime.Now,
+							iIdMensaje = -1,
 							iOrden = 1,
-							nvchContenido = modelSaveMessaje.nvchContenido,
-							nvchRol = modelSaveMessaje.nvchRol
-						});
+							nvchContenido = systemPrompt,
+							nvchRol = "system"
+						};
+						var resiltSaveMessaje = await _procesoRepository.spSaveMensaje(modelSaveMessaje);
+						var validationSaveMessaje = _responseHelper.Validacion<spSaveMensaje.Result, Mensaje>(resiltSaveMessaje);
 
+						if (validationSaveMessaje.IsSuccess)
+						{
+							chat.LstMensajes.Add(new Mensaje
+							{
+								iIdChat = modelSaveMessaje.iIdChat,
+								dtFecha = modelSaveMessaje.dtFecha,
+								iIdMensaje = validationSaveMessaje.Data.iIdMensaje,
+								iOrden = 1,
+								nvchContenido = modelSaveMessaje.nvchContenido,
+								nvchRol = modelSaveMessaje.nvchRol
+							});
+
+						}
 					}
 
 				}
@@ -110,7 +136,7 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios
 					dtFecha = DateTime.Now,
 					iIdMensaje = -1,
 					iOrden = chat.LstMensajes.Count + 1,
-					nvchContenido = nvchContenido,
+					nvchContenido = PostModel.nvchContenido,
 					nvchRol = "user"
 				};
 				var resiltSaveMessajeUser = await _procesoRepository.spSaveMensaje(modelSaveMessajeUser);

@@ -13,44 +13,44 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles
 		public static string FuncialidadPrompt(PostConversacion postModel, Proyecto proyecto, PlanTrabajo plan)
 		{
 
-			var promot = new StringBuilder();
+			var prompt = new StringBuilder();
 
-			promot.AppendLine(@" Eres un arquitecto de software experto en aplicaciones web con .NET, Clean Architecture, SQL Server y Blazor/MudBlazor. 
+			prompt.AppendLine(@" Eres un arquitecto de software experto en aplicaciones web con .NET, Clean Architecture, SQL Server y Blazor/MudBlazor. 
 				Tu tarea es ayudar en el desarrollo de la aplicación implementando las mejores practicas con patrones de diseño y principios SOLID.");
 
 
-			promot.AppendLine($"La aplicación tiene por nombre :  {proyecto.nvchNombre}");
-			promot.AppendLine($"La cual consiste en lo siguiente :  {proyecto.nvchDescripcion}");
+			prompt.AppendLine($"La aplicación tiene por nombre :  {proyecto.nvchNombre}");
+			prompt.AppendLine($"La cual consiste en lo siguiente :  {proyecto.nvchDescripcion}");
 
-			promot.AppendLine($"En el siguiente Json te envió todos los módulos y funcionalidades de la aplicación");
+			prompt.AppendLine($"En el siguiente Json te envió todos los módulos y funcionalidades de la aplicación");
 
-			promot.AppendLine($"");
+			prompt.AppendLine($"");
 			var json = JsonSerializer.Serialize(plan);
-			promot.AppendLine(json);
+			prompt.AppendLine(json);
 
-			promot.AppendLine($"");
+			prompt.AppendLine($"");
 
-			promot.AppendLine($"El proceso fue separado en Fases, y pasos.");
+			prompt.AppendLine($"El proceso fue separado en Fases, y pasos.");
 
 			var modulo = proyecto.fases.SingleOrDefault(e => e.iIdFase == postModel.iIdFase);
-			promot.AppendLine($"Justo se esta trabajando en el siguiente fase {modulo.nvchTitulo}, con propósito {modulo.nvchDescripcion}.");
+			prompt.AppendLine($"Justo se esta trabajando en el siguiente fase {modulo.nvchTitulo}, con propósito {modulo.nvchDescripcion}.");
 
-			promot.AppendLine($"Esta fase consta de varios pasos, los cuales se describen a continuación");
+			prompt.AppendLine($"Esta fase consta de varios pasos, los cuales se describen a continuación");
 
 			foreach (var paso in modulo.pasos)
 			{
-				promot.AppendLine($"Paso en secuencia numero: {paso.smNumeroSecuencia}.");
-				promot.AppendLine($"Descripción: {paso.nvchDescripcion}.");
-				promot.AppendLine($"Propósito: {paso.nvchProposito}.");
-				promot.AppendLine($"Características: {paso.nvchCaracteristicas}.");
-				promot.AppendLine($"Enfoque: {paso.nvchEnfoque}.");
+				prompt.AppendLine($"Paso en secuencia numero: {paso.smNumeroSecuencia}.");
+				prompt.AppendLine($"Descripción: {paso.nvchDescripcion}.");
+				prompt.AppendLine($"Propósito: {paso.nvchProposito}.");
+				prompt.AppendLine($"Características: {paso.nvchCaracteristicas}.");
+				prompt.AppendLine($"Enfoque: {paso.nvchEnfoque}.");
 
 			}
 
 
 
 
-			return promot.ToString();
+			return prompt.ToString();
 
 		}
 

@@ -21,6 +21,7 @@
 	<MudIconButton Icon="@Icons.Material.Filled.MoreVert"
 				   Color="Color.Default"
 				   Title="Opciones" /> *@
+
 </MudPaper>
 
 <!-- Área de Mensajes -->
@@ -130,30 +131,7 @@
 		</MudButton>
 	</div>
 
-	<!-- Sugerencias rápidas -->
-	@if (!Data.LstMensajes.Any())
-	{
-		<div class="mt-3">
-			<MudText Typo="Typo.caption" Class="mb-2">Sugerencias:</MudText>
-			<div class="d-flex gap-2 flex-wrap">
-				<MudChip T="string" Size="Size.Small"
-						 OnClick="@(() => UsarSugerencia("¿Cómo empiezo con este paso?"))"
-						 Variant="Variant.Outlined">
-					¿Cómo empiezo?
-				</MudChip>
-				<MudChip T="string" Size="Size.Small"
-						 OnClick="@(() => UsarSugerencia("Dame ejemplos de código para este paso"))"
-						 Variant="Variant.Outlined">
-					Ejemplos de código
-				</MudChip>
-				<MudChip T="string" Size="Size.Small"
-						 OnClick="@(() => UsarSugerencia("¿Cuáles son las mejores prácticas?"))"
-						 Variant="Variant.Outlined">
-					Mejores prácticas
-				</MudChip>
-			</div>
-		</div>
-	}
+
 </MudPaper>
 
 @code {

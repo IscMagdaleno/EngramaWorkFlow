@@ -31,9 +31,6 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 
 		protected override void OnInitialized()
 		{
-
-
-
 			// Configurar el pipeline de Markdown
 			if (pipeline == null)
 			{
@@ -42,7 +39,13 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 					.UseSoftlineBreakAsHardlineBreak()
 					.Build();
 			}
+
+
+
 		}
+
+
+
 
 		private bool EsUsuario(Mensaje mensaje)
 		{
@@ -93,8 +96,9 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			}
 		}
 
-		private async Task ObtenerRespuestaLLM(string mensaje)
+		public async Task ObtenerRespuestaLLM(string mensaje)
 		{
+			Loading.Show();
 			try
 			{
 				var result = await Data.PostConversacion(mensaje);
@@ -111,6 +115,9 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			{
 				Snackbar.Add($"Error al comunicarse con el asistente: {ex.Message}", Severity.Error);
 			}
+
+			Loading.Hide();
+
 		}
 
 		private void UsarSugerencia(string sugerencia)
@@ -138,7 +145,10 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			{
 				return "max-width: 70%; background-color: var(--mud-palette-primary); color: white; border-radius: 18px 18px 4px 18px;";
 			}
-			return "max-width: 70%; background-color: white; border-radius: 18px 18px 18px 4px;";
+			return "max-width: 100%; background-color: white; border-radius: 18px 18px 18px 4px;";
 		}
+
+
+
 	}
 }

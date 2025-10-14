@@ -73,6 +73,8 @@
 									</MudText>
 									<MudText Typo="Typo.body2">
 										<strong>Enfoque:</strong> @paso.nvchEnfoque
+
+
 									</MudText>
 								}
 							</MudPaper>
@@ -83,9 +85,9 @@
 		</MudItem>
 
 		<MudItem xs="12" md="9">
-			@if (Data.PasoSelected?.iIdPaso > 0)
+				<ChatLLMComponent @ref="chatLLM" Data="@Data" />
+		@* 	@if (Data.PasoSelected?.iIdPaso > 0)
 			{
-				 <ChatLLMComponent Data="@Data"  /> 
 			}
 			else
 			{
@@ -101,7 +103,7 @@
 						Elige uno de los pasos de la izquierda para iniciar la conversación con el asistente
 					</MudText>
 				</MudPaper>
-			}
+			} *@
 		</MudItem>
 	}
 	else

@@ -4,10 +4,8 @@ using EngramaCoreStandar.Results;
 
 using WorkFlow.API.EngramaLevels.Dominio.Interfaces;
 using WorkFlow.API.EngramaLevels.Dominio.Servicios;
-using WorkFlow.API.EngramaLevels.Dominio.Servicios.Utiles;
 using WorkFlow.API.EngramaLevels.Infrastructure.Interfaces;
 using WorkFlow.Share.Objetos.Proceso;
-using WorkFlow.Share.PostClass.Planes;
 using WorkFlow.Share.PostClass.Proceso;
 
 namespace WorkFlow.API.EngramaLevels.Dominio.Core
@@ -49,30 +47,16 @@ namespace WorkFlow.API.EngramaLevels.Dominio.Core
 			{
 				var resultado = new Response<Mensaje>();
 
-				var resultProyecto = await _planesDominio.GetProyecto(new PostGetProyecto { iIdProyecto = PostModel.iIdProyecto });
-				var resultPlan = await _planesDominio.GetPlanTrabajo(new PostGetPlanTrabajo { iIdPlanTrabajo = PostModel.iIdPlanTrabajo });
-
-
-				if (resultProyecto.IsSuccess && resultPlan.IsSuccess)
+				var ResponseChat = await _chatMemoryService.GetChatPorFase(PostModel);
+				if (ResponseChat.IsSuccess)
 				{
 
-					var proyect = resultProyecto.Data.SingleOrDefault();
-					var plan = resultPlan.Data.SingleOrDefault();
+					var respustaLLM = await _azureIAService.CallAzureOpenIAWithMemory(ResponseChat.Data);
 
+					var resultSaveMessage = await _chatMemoryService.GuardarRespuestaLLM(respustaLLM, ResponseChat.Data);
 
-					var systemPrompt = GeneraPrompts.FuncialidadPrompt(PostModel, proyect, plan);
+					return resultSaveMessage;
 
-					var ResponseChat = await _chatMemoryService.GetChatPorFase(PostModel.iIdFase, PostModel.nvchContenido, systemPrompt);
-					if (ResponseChat.IsSuccess)
-					{
-
-						var respustaLLM = await _azureIAService.CallAzureOpenIAWithMemory(ResponseChat.Data);
-
-						var resultSaveMessage = await _chatMemoryService.GuardarRespuestaLLM(respustaLLM, ResponseChat.Data);
-
-						return resultSaveMessage;
-
-					}
 
 				}
 
