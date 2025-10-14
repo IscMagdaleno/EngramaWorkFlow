@@ -1,0 +1,149 @@
+﻿@using WorkFlow.Share.Objetos.Planes
+@inherits EngramaComponent
+
+<div class="chat-paginado-container">
+
+	<div class="input-area">
+		<MudPaper Elevation="2" Class="pa-3">
+			<div class="d-flex gap-2 align-end">
+				<MudTextField @bind-Value="nuevoMensaje"
+							  Placeholder="Escribe tu pregunta o solicitud..."
+							  Variant="Variant.Outlined"
+							  Lines="3"
+							  MaxLines="6"
+							  FullWidth="true"
+							  Disabled="@esperandoRespuesta"
+							  OnKeyDown="HandleKeyDown"
+							  Immediate="true"
+							  Class="flex-grow-1"
+							  HelperText="Presiona Ctrl+Enter para enviar" />
+
+				<div class="d-flex flex-column gap-2">
+					<MudButton Variant="Variant.Filled"
+							   Color="Color.Primary"
+							   StartIcon="@Icons.Material.Filled.Send"
+							   OnClick="EnviarNuevoMensaje"
+							   Disabled="@(string.IsNullOrWhiteSpace(nuevoMensaje) || esperandoRespuesta)"
+							   Size="Size.Large">
+						Enviar
+					</MudButton>
+				</div>
+			</div>
+		</MudPaper>
+	</div>
+
+	@if (totalConversaciones > 0)
+	{
+		<div class="paginacion-controls">
+			<MudPaper Elevation="1" Class="pa-2 d-flex align-center justify-space-between">
+				<MudFab StartIcon="@Icons.Material.Filled.KeyboardArrowLeft"
+						OnClick="ConversacionAnterior"
+						Disabled="@(indicePaginaActual <= 0)"
+						Label="Conversación anterior" />
+
+				<div class="d-flex align-center gap-2">
+					<MudChip T="string" Size="Size.Small" Color="Color.Primary">
+						@(indicePaginaActual + 1) / @totalConversaciones
+					</MudChip>
+					<MudText Typo="Typo.body2">conversaciones</MudText>
+				</div>
+
+				<MudFab StartIcon="@Icons.Material.Filled.KeyboardArrowRight"
+						OnClick="ConversacionSiguiente"
+						Disabled="@(indicePaginaActual >= totalConversaciones - 1)"
+						Label="Conversación siguiente" />
+			</MudPaper>
+		</div>
+	}
+
+	<!-- Área de visualización de conversación actual -->
+	<div class="conversacion-actual" @ref="conversacionContainer">
+		@if (conversacionActual != null)
+		{
+			<!-- Mensaje del Usuario -->
+			<div class="mensaje-usuario-section">
+				<div class="mensaje-header">
+					<MudAvatar Color="Color.Secondary" Size="Size.Medium" Class="mr-3">
+						<MudIcon Icon="@Icons.Material.Filled.Person" />
+					</MudAvatar>
+					<div>
+						<MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Tú</MudText>
+						<MudText Typo="Typo.caption" Color="Color.Default">
+							@conversacionActual.MensajeUsuario.dtFecha.ToDateTime().ToString("dd/MM/yyyy HH:mm")
+						</MudText>
+					</div>
+				</div>
+				<MudPaper Elevation="0" Class="mensaje-contenido usuario-mensaje">
+					<MudText Typo="Typo.body1" Style="white-space: pre-wrap;">
+						@conversacionActual.MensajeUsuario.nvchContenido
+					</MudText>
+				</MudPaper>
+			</div>
+
+			<MudDivider Class="my-4" />
+
+			<!-- Respuesta del Asistente -->
+			<div class="mensaje-asistente-section">
+				<div class="mensaje-header">
+					<MudAvatar Color="Color.Primary" Size="Size.Medium" Class="mr-3">
+						<MudIcon Icon="@Icons.Material.Filled.SmartToy" />
+					</MudAvatar>
+					<div>
+						<MudText Typo="Typo.subtitle1" Color="Color.Primary" Style="font-weight: 600;">Asistente IA</MudText>
+						@if (conversacionActual.MensajeAsistente != null)
+						{
+							<MudText Typo="Typo.caption" Color="Color.Secondary">
+								@conversacionActual.MensajeAsistente.dtFecha.ToDateTime().ToString("dd/MM/yyyy HH:mm")
+							</MudText>
+						}
+					</div>
+					<MudSpacer />
+	
+				</div>
+
+				@if (conversacionActual.MensajeAsistente != null)
+				{
+					<MudPaper Elevation="0" Class="mensaje-contenido asistente-mensaje">
+						<div class="markdown-content">
+							@((MarkupString)ConvertirMarkdownAHtml(conversacionActual.MensajeAsistente.nvchContenido))
+						</div>
+					</MudPaper>
+				}
+				else if (esperandoRespuesta)
+				{
+					<MudPaper Elevation="0" Class="mensaje-contenido asistente-mensaje pa-4">
+						<div class="d-flex align-center">
+							<MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-3" />
+							<MudText Typo="Typo.body1">Generando respuesta...</MudText>
+						</div>
+					</MudPaper>
+				}
+			</div>
+		}
+		else if (!Data?.LstMensajes?.Any() == true)
+		{
+			<!-- Estado inicial -->
+			<div class="text-center pa-8" style="margin-top: 20%;">
+				<MudIcon Icon="@Icons.Material.Filled.QuestionAnswer"
+						 Style="font-size: 4rem; opacity: 0.3;"
+						 Color="Color.Primary" />
+				<MudText Typo="Typo.h6" Class="mt-4 mb-2">
+					Comienza la conversación
+				</MudText>
+				<MudText Typo="Typo.body2" Color="Color.Default">
+					Escribe tu pregunta sobre este paso del desarrollo
+				</MudText>
+			</div>
+		}
+	</div>
+
+	<!-- Controles de paginación -->
+	
+
+	<!-- Área de entrada de nuevo mensaje -->
+	
+</div>
+
+<style>
+	
+</style>

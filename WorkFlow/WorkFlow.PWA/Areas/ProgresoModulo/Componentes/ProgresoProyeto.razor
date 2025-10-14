@@ -1,131 +1,170 @@
 ﻿@using WorkFlow.PWA.Areas.PlanesModulo.Components
-@using WorkFlow.Share.Objetos.Planes;
+@using WorkFlow.Share.Objetos.Planes
 @inherits EngramaComponent
 
-<MudGrid>
-	<!-- Encabezado del Proyecto -->
-	<MudItem xs="12">
-		<CardProyecto Proyecto="@Data.ProyectoSelected"></CardProyecto>
-	</MudItem>
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-4">
+    <!-- Breadcrumb de navegación compacto -->
+    <MudBreadcrumbs Items="_breadcrumbItems" Class="mb-4"></MudBreadcrumbs>
 
-	<!-- Selector de Fases (Tabs horizontales) -->
-	<MudItem xs="12">
-		<MudPaper Elevation="2" Class="pa-4">
-			<MudText Typo="Typo.h6" Class="mb-3">Fases del Proyecto</MudText>
-			<MudChipSet T="Fases" @bind-SelectedChip="selectedFaseChip" 
-						Color="Color.Success">
-				@foreach (var fase in Data.ProyectoSelected.fases)
-				{
-					<MudChip Text="@fase.nvchTitulo" 
-							 Value="@fase"
-							 OnClick="@(() => OnClickFaseSelected(fase))">
-						@fase.nvchTitulo
-					</MudChip>
-				}
-			</MudChipSet>
-		</MudPaper>
-	</MudItem>
+    <!-- Stepper horizontal con fases -->
+    <MudPaper Elevation="0" Class="pa-4 mb-4">
+        <MudStepper @ref="stepper" 
+                    NonLinear="true" >
+            @foreach (var fase in Data.ProyectoSelected.fases.OrderBy(f => f.iIdFase))
+            {
+                <MudStep Title="@fase.nvchTitulo" OnClick="@(() => OnClickFaseSelected(fase))">
+                </MudStep>
+            }
+        </MudStepper>
+    </MudPaper>
 
-	@if (Data.FaseSelected?.iIdFase > 0)
-	{
-		<!-- Panel dividido: Pasos a la izquierda, Chat a la derecha -->
-		<MudItem xs="12" md="3">
-			<MudPaper Elevation="2" Class="pa-4" Style="height: calc(100vh - 350px); overflow-y: auto;">
-				<MudText Typo="Typo.h6" Class="mb-3">
-					<MudIcon Icon="@Icons.Material.Filled.FormatListNumbered" Class="mr-2" />
-					Pasos de la Fase
-				</MudText>
-				
-				<MudList Clickable="true" @bind-SelectedValue="selectedPasoValue">
-					@foreach (var paso in Data.FaseSelected.pasos.OrderBy(p => p.smNumeroSecuencia))
-					{
-						<MudListItem Value="@paso" 
-									 OnClick="@(() => OnClickPasoSelected(paso))"
-									 Class="@(Data.PasoSelected?.iIdPaso == paso.iIdPaso ? "mud-success-text" : "")">
-							<MudPaper Elevation="@(Data.PasoSelected?.iIdPaso == paso.iIdPaso ? 4 : 1)" 
-									  Class="pa-3 mb-2"
-									  Style="@(Data.PasoSelected?.iIdPaso == paso.iIdPaso ? "border-left: 4px solid var(--mud-palette-success);" : "")">
-								<div class="d-flex align-center mb-2">
-									<MudChip Size="Size.Small" 
-											 Color="@(Data.PasoSelected?.iIdPaso == paso.iIdPaso ? Color.Success : Color.Default)">
-										Paso @paso.smNumeroSecuencia
-									</MudChip>
-									@if (Data.PasoSelected?.iIdPaso == paso.iIdPaso)
-									{
-										<MudIcon Icon="@Icons.Material.Filled.CheckCircle" 
-												 Color="Color.Success" 
-												 Size="Size.Small" 
-												 Class="ml-auto" />
-									}
-								</div>
-								
-								<MudText Typo="Typo.body2" Class="mb-2">
-									<strong>Descripción:</strong> @GetTruncatedText(paso.nvchDescripcion, 80)
-								</MudText>
-								
-								@if (Data.PasoSelected?.iIdPaso == paso.iIdPaso)
-								{
-									<MudText Typo="Typo.body2" Class="mb-1">
-										<strong>Propósito:</strong> @paso.nvchProposito
-									</MudText>
-									<MudText Typo="Typo.body2" Class="mb-1">
-										<strong>Características:</strong> @paso.nvchCaracteristicas
-									</MudText>
-									<MudText Typo="Typo.body2">
-										<strong>Enfoque:</strong> @paso.nvchEnfoque
+    <MudGrid Spacing="3">
+        <!-- Sidebar con pasos (colapsable en móvil) -->
+        <MudItem xs="12" md="3">
+            <MudPaper Elevation="2" Class="pa-3" Style="position: sticky; top: 20px;">
+                <div class="d-flex align-center justify-space-between mb-3">
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.ListAlt" Class="mr-2" />
+                        Pasos
+                    </MudText>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Info">
+                        @(Data.FaseSelected?.pasos?.Count ?? 0)
+                    </MudChip>
+                </div>
 
+                @if (Data.FaseSelected?.iIdFase > 0)
+                {
+                    <MudList T="Paso"   Dense="true" Class="paso-list">
+                        @foreach (var paso in Data.FaseSelected.pasos.OrderBy(p => p.smNumeroSecuencia))
+                        {
+                            var isSelected = Data.PasoSelected?.iIdPaso == paso.iIdPaso;
+                            var isCompleted = paso.bCompletado;
 
-									</MudText>
-								}
-							</MudPaper>
-						</MudListItem>
-					}
-				</MudList>
-			</MudPaper>
-		</MudItem>
+                            <MudListItem T="Paso" 
+                                         Value="@paso"
+                                         OnClick="@(() => OnClickPasoSelected(paso))"
+                                         Class="@(isSelected ? "paso-selected" : "")"
+                                         Style="border-radius: 8px; margin-bottom: 8px;">
+                                <div class="d-flex align-center">
+                                    @if (isCompleted)
+                                    {
+                                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" 
+                                                 Color="Color.Success" 
+                                                 Size="Size.Small" 
+                                                 Class="mr-2" />
+                                    }
+                                    else if (isSelected)
+                                    {
+                                        <MudIcon Icon="@Icons.Material.Filled.RadioButtonChecked" 
+                                                 Color="Color.Primary" 
+                                                 Size="Size.Small" 
+                                                 Class="mr-2" />
+                                    }
+                                    else
+                                    {
+                                        <MudIcon Icon="@Icons.Material.Filled.RadioButtonUnchecked" 
+                                                 Color="Color.Default" 
+                                                 Size="Size.Small" 
+                                                 Class="mr-2" />
+                                    }
+                                    
+                                    <div class="flex-grow-1">
+                                        <MudText Typo="Typo.body2">
+                                            Paso @paso.smNumeroSecuencia
+                                        </MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Default">
+                                            @GetTruncatedText(paso.nvchDescripcion, 40)
+                                        </MudText>
+                                    </div>
+                                </div>
+                            </MudListItem>
+                        }
+                    </MudList>
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Info" Dense="true">
+                        Selecciona una fase para ver los pasos
+                    </MudAlert>
+                }
+            </MudPaper>
+        </MudItem>
 
-		<MudItem xs="12" md="9">
-				<ChatLLMComponent @ref="chatLLM" Data="@Data" />
-		@* 	@if (Data.PasoSelected?.iIdPaso > 0)
-			{
-			}
-			else
-			{
-				<MudPaper Elevation="2" Class="pa-8 text-center" Style="height: calc(100vh - 350px);">
-					<MudIcon Icon="@Icons.Material.Filled.TouchApp" 
-							 Style="font-size: 4rem;" 
-							 Color="Color.Default" 
-							 Class="mb-4" />
-					<MudText Typo="Typo.h5" Color="Color.Default">
-						Selecciona un paso para comenzar
-					</MudText>
-					<MudText Typo="Typo.body1" Color="Color.Default" Class="mt-2">
-						Elige uno de los pasos de la izquierda para iniciar la conversación con el asistente
-					</MudText>
-				</MudPaper>
-			} *@
-		</MudItem>
-	}
-	else
-	{
-		<!-- Estado vacío cuando no hay fase seleccionada -->
-		<MudItem xs="12">
-			<MudPaper Elevation="0" Class="pa-8 text-center">
-				<MudIcon Icon="@Icons.Material.Filled.Lightbulb" 
-						 Style="font-size: 5rem;" 
-						 Color="Color.Primary" 
-						 Class="mb-4" />
-				<MudText Typo="Typo.h4" Class="mb-2">
-					¡Comienza seleccionando una fase!
-				</MudText>
-				<MudText Typo="Typo.body1" Color="Color.Default">
-					Selecciona una de las fases anteriores para ver sus pasos y comenzar a trabajar
-				</MudText>
-			</MudPaper>
-		</MudItem>
-	}
-</MudGrid>
+        <!-- Área principal: Chat con paginación -->
+        <MudItem xs="12" md="9">
+            @if (Data.PasoSelected?.iIdPaso > 0)
+            {
+                <MudPaper Elevation="2" Class="d-flex flex-column" Style="height: calc(150vh - 200px);">
+                    <!-- Header del paso actual -->
+                    <div class="pa-4 d-flex align-center justify-space-between" 
+                         style="border-bottom: 1px solid var(--mud-palette-divider); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="d-flex align-center">
+                            <MudAvatar Color="Color.Surface" Size="Size.Medium" Class="mr-3">
+                                <MudIcon Icon="@Icons.Material.Filled.Assignment" Color="Color.Primary" />
+                            </MudAvatar>
+                            <div>
+                                <MudText Typo="Typo.h6" >
+                                    Paso @Data.PasoSelected.smNumeroSecuencia: @Data.PasoSelected.nvchDescripcion
+                                </MudText>
+                                <MudText Typo="Typo.caption" >
+                                    @Data.FaseSelected.nvchTitulo
+                                </MudText>
+                            </div>
+                        </div>
+                        <div>
+                            <MudIconButton Icon="@Icons.Material.Filled.Info" 
+                                           Color="Color.Surface"
+                                           OnClick="@(() => mostrarDetallesPaso = !mostrarDetallesPaso)" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Refresh" 
+                                           Color="Color.Surface"
+                                           OnClick="ReiniciarConversacion" />
+                        </div>
+                    </div>
 
-@code {
-	
-}
+                    <!-- Detalles del paso (colapsable) -->
+                    <MudCollapse Expanded="@mostrarDetallesPaso">
+                        <MudPaper Elevation="0" Class="pa-3" Style="background-color: #f5f5f5; border-bottom: 1px solid var(--mud-palette-divider); color:black" >
+                            <MudGrid>
+                                <MudItem xs="12" sm="6">
+                                    <MudText Typo="Typo.caption" Class="mb-1"><strong>Propósito:</strong></MudText>
+                                    <MudText Typo="Typo.body2">@Data.PasoSelected.nvchProposito</MudText>
+                                </MudItem>
+                                <MudItem xs="12" sm="6">
+                                    <MudText Typo="Typo.caption" Class="mb-1"><strong>Enfoque:</strong></MudText>
+                                    <MudText Typo="Typo.body2">@Data.PasoSelected.nvchEnfoque</MudText>
+                                </MudItem>
+                            </MudGrid>
+                        </MudPaper>
+                    </MudCollapse>
+
+                    <!-- Área de conversaciones paginadas -->
+                    <div class="flex-grow-1" style="overflow: hidden;">
+                        <ChatPaginadoComponent @ref="chatPaginado" Data="@Data" />
+                    </div>
+                </MudPaper>
+            }
+            else
+            {
+                <!-- Estado vacío elegante -->
+                <MudPaper Elevation="2" Class="pa-8 text-center" Style="height: calc(100vh - 250px);">
+                    <div style="margin-top: 15%;">
+                        <MudIcon Icon="@Icons.Material.Filled.TouchApp" 
+                                 Style="font-size: 5rem; opacity: 0.3;" 
+                                 Color="Color.Primary" />
+                        <MudText Typo="Typo.h5" Class="mt-4 mb-2">
+                            Selecciona un paso para comenzar
+                        </MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Default">
+                            Elige una fase y un paso para iniciar el desarrollo
+                        </MudText>
+                    </div>
+                </MudPaper>
+            }
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+<style>
+
+</style>
+

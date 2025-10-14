@@ -278,3 +278,71 @@ h1 {
 		font-size: 0.85em;
 	}
 }
+
+.chat-paginado-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.conversacion-actual {
+	flex: 1;
+	overflow-y: auto;
+	padding: 24px;
+	background-color: #fafafa;
+}
+
+.mensaje-usuario-section,
+.mensaje-asistente-section {
+	margin-bottom: 24px;
+}
+
+.mensaje-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.mensaje-contenido {
+	padding: 20px;
+	border-radius: 12px;
+	max-height: 900px;
+	overflow-y: auto;
+}
+
+.usuario-mensaje {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	margin-left: 56px;
+}
+
+.asistente-mensaje {
+	background-color: white;
+	margin-left: 56px;
+	border: 1px solid #e0e0e0;
+}
+
+.paginacion-controls {
+	padding: 12px 24px;
+	background-color: white;
+	border-top: 1px solid #e0e0e0;
+}
+
+.input-area {
+	padding: 16px 24px;
+	background-color: white;
+	border-top: 2px solid #e0e0e0;
+}
+
+.paso-selected {
+	background-color: var(--mud-palette-primary-lighten) !important;
+	border-left: 4px solid var(--mud-palette-primary) !important;
+}
+
+.paso-list .mud-list-item:hover {
+	background-color: var(--mud-palette-action-default-hover);
+}
+
+.mud-stepper-header {
+	cursor: pointer;
+}

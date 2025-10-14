@@ -16,27 +16,19 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 
 		[Parameter] public MainProgreso Data { get; set; }
 
+		private MudStepper stepper;
+		private bool mostrarDetallesPaso;
+		private ChatPaginadoComponent chatPaginado;
+		private List<BreadcrumbItem> _breadcrumbItems;
 
-		private MudChip<Fases> selectedFaseChip;
-		private object selectedPasoValue;
 
 		public ChatLLMComponent chatLLM { get; set; }
+
+
 		private void OnClickFaseSelected(Fases fase)
 		{
 			Data.FaseSelected = fase;
 		}
-
-
-		private async Task OnClickPasoSelected(dynamic paso)
-		{
-			Data.PasoSelected = paso;
-
-			var promptInicial = PrompPasoInicial();
-			await chatLLM.ObtenerRespuestaLLM(promptInicial);
-			StateHasChanged();
-		}
-
-
 
 
 		private string GetTruncatedText(string text, int maxLength)
@@ -46,8 +38,6 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 
 			return text.Length <= maxLength ? text : text.Substring(0, maxLength) + "...";
 		}
-
-
 
 
 		private string PrompPasoInicial()
@@ -65,6 +55,25 @@ namespace WorkFlow.PWA.Areas.ProgresoModulo.Componentes
 			$" las tablas, las configuraciones bien definidas, con comentarios de para que sirve cada cosa.");
 
 			return promptInicial.ToString();
+		}
+
+
+
+		private async Task OnClickPasoSelected(Paso paso)
+		{
+			Data.PasoSelected = paso;
+			StateHasChanged();
+			await Task.Delay(1);
+
+			var iniciarMensje = PrompPasoInicial();
+			await chatPaginado.IniciarConversacion(iniciarMensje);
+
+		}
+
+
+		private async Task ReiniciarConversacion()
+		{
+			// Implement your logic to reset conversation
 		}
 	}
 }

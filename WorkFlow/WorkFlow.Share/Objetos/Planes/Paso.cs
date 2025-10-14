@@ -14,7 +14,7 @@ namespace WorkFlow.Share.Objetos.Planes
 		public DateTime? dtCreadoEn { get; set; }
 		public DateTime? dtActualizadoEn { get; set; }
 
-
+		public bool bCompletado { get; set; }
 		public Paso()
 		{
 			nvchDescripcion = string.Empty;
